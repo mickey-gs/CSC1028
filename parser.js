@@ -1,13 +1,15 @@
+import { Buffer } from "./buffer.js"
+
 export class Parser {
   buffer;
 
   constructor() {
-    this.buffer = "";
+    this.buffer = new Buffer;
   }
 
   parse(node) {
     this[node.type](node);
-    return this.buffer;
+    return this.buffer.get();
   }
 
   Program(node) {
@@ -20,44 +22,79 @@ export class Parser {
     this.parse(node.expression);
   }
 
+  FunctionDeclaration(node) {
+    this.parse(node.id);
+    for (let i = 0; i < node.params.length; i++) {
+      this.parse(node.params[i]);
+    }
+    this.parse(node.body);
+  }
+
   AssignmentExpression(node) {
     this.parse(node.left);
-    this.buffer += " " + node.operator + " ";
+    this.buffer.add(" ");
+    this.buffer.add(node.operator);
+    this.buffer.add(" ");
     this.parse(node.right);
+  }
+
+  BlockStatement(node) {
+    for (let i = 0; i < node.body.length; i++) {
+      this.parse(node.body[i]);
+    }
+  }
+
+  VariableDeclaration(node) {
+    for (let i = 0; i < node.declarations.length; i++) {
+      this.parse(node.declarations[i]);
+    }
+  }
+
+  VariableDeclarator(node) {
+    this.parse(node.id);
+    this.buffer.add(" = ");
+    this.parse(node.init);
+  }
+
+  ReturnStatement(node) {
+    this.parse(node.argument);
   }
 
   CallExpression(node) {
     this.parse(node.callee);
-    // console.log(node.arguments[0]);
-    this.buffer += "(";
-    this.parse(node.arguments[0]);
-    for (let i = 1; i != node.arguments.length; i++) {
-      this.buffer += ", ";
-      this.parse(node.arguments[i])
+    this.buffer.add("(");
+    if (node.arguments.length > 0) {
+      this.parse(node.arguments[0]);
+      for (let i = 1; i != node.arguments.length; i++) {
+        this.buffer.add(", ");
+        this.parse(node.arguments[i])
+      }
     }
-    this.buffer += ")";
+    this.buffer.add(")");
   }
 
   MemberExpression(node) {
-    this.buffer += node.object.name;
-    this.buffer += ".";
-    this.buffer += node.property.name;
+    this.buffer.add(node.object.name);
+    this.buffer.add(".");
+    this.buffer.add(node.property.name);
   }
 
   BinaryExpression(node) {
-    if (node.left.type != "Literal") {
-      this.buffer += "(";
+    if (node.left.type == "BinaryExpression") {
+      this.buffer.add("(");
       this.parse(node.left);
-      this.buffer += ")";
+      this.buffer.add(")");
     }
     else {
       this.parse(node.left);
     }
-    this.buffer += " " + node.operator + " ";
-    if (node.right.type != "Literal") {
-      this.buffer += "(";
+    this.buffer.add(" ");
+    this.buffer.add(node.operator);
+    this.buffer.add(" ");
+    if (node.right.type == "BinaryExpression") {
+      this.buffer.add("(");
       this.parse(node.right);
-      this.buffer += ")";
+      this.buffer.add(")");
     }
     else {
       this.parse(node.right);
@@ -65,10 +102,10 @@ export class Parser {
   }
 
   Identifier(node) {
-    this.buffer += node.name;
+    this.buffer.add(node.name);
   }
 
   Literal(node) {
-    this.buffer += JSON.stringify(node.value);
+    this.buffer.add(JSON.stringify(node.value));
   }
 }
