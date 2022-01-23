@@ -20,6 +20,12 @@ export class Parser {
     this.parse(node.expression);
   }
 
+  AssignmentExpression(node) {
+    this.parse(node.left);
+    this.buffer += " " + node.operator + " ";
+    this.parse(node.right);
+  }
+
   CallExpression(node) {
     this.parse(node.callee);
     // console.log(node.arguments[0]);
@@ -56,6 +62,10 @@ export class Parser {
     else {
       this.parse(node.right);
     }
+  }
+
+  Identifier(node) {
+    this.buffer += node.name;
   }
 
   Literal(node) {

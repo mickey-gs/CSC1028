@@ -5,5 +5,5 @@ import * as fs from "fs";
 
 var contents = fs.readFileSync(process.argv[process.argv.length - 1]).toString();
 var ast = acorn.parse(contents, {ecmaVersion: 2020});
-let parser = new PyParser;
+let parser = new JSParser;
 process.stdout.write(parser.parse(ast));
