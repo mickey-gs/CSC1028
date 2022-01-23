@@ -18,3 +18,14 @@ The eventual idea- the valuable end product to create- would be a tool that enab
 This will all come later, though. First, I'll focus on trying to convert basic programs (hello world, arithmetic) into different languages.
 I'm also thinking about creating the first deiverable, the online guide on something to do with my project. I haven't ran into any specific problems with getting my project up and running, so that seems like a non-starter. John suggested something to do with the first stage of my project, which would be less of a how-to guide, and more of an informative piece on hello world programs, and how they're written in a variety of programs. This sounds promising, because it might make a good comparative piece on language design as well as being able to show off what work I've completed so far. 
 I'll make a start on that work now and see how it goes.
+
+Friday, January 21st, 2022
+Just started work on a parser for converting AST back into code. So far, I have a parser specific to JavaScript that can handle simple method calls and arithmetic (which also preserves brackets and order of operations). Was a bit hesitant to start as I expected this to be really quite difficult, but so far not too many problems have come up. The next step is to begin work on a more general parser- my target is to be able to convert to Python and Ruby at each step of the parser's implementation. I chose these languages in particular due to:
+1. My familiarity with them (easy to quickly validate the output of my program)
+2. Their similarities with JavaScript- both support OOP and are both interpreted and dynamically typed
+I'll take a look at how Babel structures the code for its more complex parser, and then start adding on to mine.
+
+Sunday, January 23rd, 2021
+Made some good progress with the parser. I've brought it over from a basic set of functions global to the script to an organised super class (Parser), with sub classes started for JavaScript and Python. This means that I can override methods when language differences need to be taken into account (e.g. syntax for delcaring a function, ending lines with semicolons), but share methods for common functionality, like arithmetical expressions.
+Quite happy with this approach, and how quickly I managed to implement it, so it looks like last term's OOP class has ended up being very heplful. 
+The next step for the parser will be more complicated language features (such as functions, classes, etc), and adding in indentation (which is needed for Python to even run a script).
