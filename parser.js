@@ -101,6 +101,23 @@ export class Parser {
     }
   }
 
+  IfStatement(node) {
+    this.buffer.add("if ");
+    this.parse(node.test);
+    this.parse(node.consequent);
+    if (node.alternate) {
+      this.buffer.add("else ");
+      this.parse(node.alternate);
+    }
+  }
+
+  WhileStatement(node) {
+    this.buffer.add("while (");
+    this.parse(node.test);
+    this.buffer.add(")");
+    this.parse(node.body);
+  }
+
   Identifier(node) {
     this.buffer.add(node.name);
   }

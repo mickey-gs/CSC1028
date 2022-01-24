@@ -25,6 +25,10 @@ export class Buffer {
     this.#indent -= 1;
   }
 
+  replace(remove, str) {
+    this.#buffer = this.#buffer.replace(remove, str);
+  }
+
   trim() {
     let temp = this.#buffer.split("");
     let i = temp.length - 1;

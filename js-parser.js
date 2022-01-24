@@ -30,7 +30,7 @@ export class JSParser extends Parser {
   }
 
   BlockStatement(node) { 
-    this.buffer.add("{");
+    this.buffer.add(" {");
     this.buffer.indent();
     this.buffer.newline();
     super.BlockStatement(node);

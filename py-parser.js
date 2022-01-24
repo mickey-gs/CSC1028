@@ -1,8 +1,25 @@
 import { Parser } from "./parser.js"
+import * as fs from "fs"
 
 export class PyParser extends Parser {
+  corrections;
+  
   constructor() {
     super();
+    this.corrections = JSON.parse(fs.readFileSync("./python.json"));
+  }
+
+  parse(node) {
+    this[node.type](node);
+    let code = this.buffer.get();
+    return this.correct(code);
+  }
+
+  correct(code) {
+    for (let key of Object.keys(this.corrections)) {
+      this.buffer.replace(key, this.corrections[key]);
+    }
+    return code;
   }
 
   ExpressionStatement(node) {
@@ -22,7 +39,7 @@ export class PyParser extends Parser {
     for (let i = 0; i < node.params.length; i++) {
       this.parse(node.params[i]);
     }
-    this.buffer.add("): ");
+    this.buffer.add(")");
     this.parse(node.body);
   }
 
@@ -32,12 +49,14 @@ export class PyParser extends Parser {
     this.buffer.newline();
   }
 
-  BlockStatement(node) { 
+  BlockStatement(node) {
+    this.buffer.trim();
+    this.buffer.add(":")
     this.buffer.indent();
     this.buffer.newline();
     super.BlockStatement(node);
     this.buffer.trim();
     this.buffer.dedent();
-    this.buffer.newline().newline();
+    this.buffer.newline();
   }
 }
