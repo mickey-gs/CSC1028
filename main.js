@@ -1,5 +1,5 @@
-import { JSParser } from "./js-parser.js";
-import { PyParser } from "./py-parser.js"
+import { JSParser } from "./src/js-transpiler/js-transpiler.js";
+import { PyParser } from "./src/py-transpiler/py-transpiler.js";
 import * as acorn from "acorn";
 import * as fs from "fs";
 

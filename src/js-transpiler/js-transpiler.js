@@ -1,4 +1,4 @@
-import { Parser } from "./parser.js"
+import { Parser } from "../transpiler-super/transpiler-super.js"
 
 export class JSParser extends Parser {
   constructor() {

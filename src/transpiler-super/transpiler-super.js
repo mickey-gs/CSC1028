@@ -1,4 +1,4 @@
-import { Buffer } from "./buffer.js"
+import { Buffer } from "../buffer/buffer.js"
 
 export class Parser {
   buffer;

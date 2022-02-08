@@ -1,4 +1,4 @@
-import { Parser } from "./parser.js"
+import { Parser } from "../transpiler-super/transpiler-super.js"
 import * as fs from "fs"
 
 export class PyParser extends Parser {
@@ -6,7 +6,7 @@ export class PyParser extends Parser {
   
   constructor() {
     super();
-    this.corrections = JSON.parse(fs.readFileSync("./python.json"));
+    this.corrections = JSON.parse(fs.readFileSync("./src/py-transpiler/python.json"));
   }
 
   parse(node) {
