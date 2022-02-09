@@ -1,9 +1,13 @@
 import { Buffer } from "../buffer/buffer.js"
 
-export class Parser {
+export class TranspilerSuper {
   buffer;
 
   constructor() {
+    this.buffer = new Buffer;
+  }
+
+  clear() {
     this.buffer = new Buffer;
   }
 
@@ -24,9 +28,15 @@ export class Parser {
 
   FunctionDeclaration(node) {
     this.parse(node.id);
-    for (let i = 0; i < node.params.length; i++) {
-      this.parse(node.params[i]);
+    this.buffer.add("(");
+    if (node.params.length != 0) {
+      this.parse(node.params[0]);
+      for (let i = 1; i < node.params.length; i++) {
+        this.buffer.add(", ");
+        this.parse(node.params[i]);
+      }
     }
+    this.buffer.add(")");
     this.parse(node.body);
   }
 
@@ -75,8 +85,21 @@ export class Parser {
 
   MemberExpression(node) {
     this.buffer.add(node.object.name);
-    this.buffer.add(".");
-    this.buffer.add(node.property.name);
+    if (node.computed) {
+      this.buffer.add("[");
+      this.buffer.add(node.property.name);
+      this.buffer.add("]");
+    }
+    else {
+      this.buffer.add(".");
+      this.buffer.add(node.property.name);
+    }
+  }
+
+  UnaryExpression(node) {
+    if (node.prefix) this.buffer.add(node.operator);
+    this.parse(node.argument);
+    if (!(node.prefix)) this.buffer.add(node.operator);
   }
 
   BinaryExpression(node) {
@@ -124,5 +147,19 @@ export class Parser {
 
   Literal(node) {
     this.buffer.add(JSON.stringify(node.value));
+  }
+
+  ArrayExpression(node) {
+    this.buffer.add("[");
+    if (node.elements.length == 0) {
+      this.buffer.add("]");
+      return;
+    }
+    this.parse(node.elements[0]);
+    for (let i = 1; i < node.elements.length; i++) {
+      this.buffer.add(", ");
+      this.parse(node.elements[i]);
+    }
+    this.buffer.add("]");
   }
 }

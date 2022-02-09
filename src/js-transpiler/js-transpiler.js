@@ -1,6 +1,6 @@
-import { Parser } from "../transpiler-super/transpiler-super.js"
+import { TranspilerSuper } from "../transpiler-super/transpiler-super.js"
 
-export class JSParser extends Parser {
+export class JSTranspiler extends TranspilerSuper {
   constructor() {
     super();
   }
@@ -13,13 +13,7 @@ export class JSParser extends Parser {
 
   FunctionDeclaration(node) {
     this.buffer.add("function ");
-    this.parse(node.id);
-    this.buffer.add("(");
-    for (let i = 0; i < node.params.length; i++) {
-      this.parse(node.params[i]);
-    }
-    this.buffer.add(") ");
-    this.parse(node.body);
+    super.FunctionDeclaration(node);
   }
 
   ReturnStatement(node) {
@@ -45,5 +39,16 @@ export class JSParser extends Parser {
     this.buffer.add(node.kind + " ");
     super.VariableDeclaration(node);
     this.buffer.add(";").newline();
+  }
+
+  IfStatement(node) {
+    this.buffer.add("if (");
+    this.parse(node.test);
+    this.buffer.add(")");
+    this.parse(node.consequent);
+    if (node.alternate) {
+      this.buffer.add("else ");
+      this.parse(node.alternate);
+    }
   }
 }

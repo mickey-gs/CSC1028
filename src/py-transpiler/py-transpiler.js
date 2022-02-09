@@ -1,7 +1,7 @@
-import { Parser } from "../transpiler-super/transpiler-super.js"
+import { TranspilerSuper } from "../transpiler-super/transpiler-super.js"
 import * as fs from "fs"
 
-export class PyParser extends Parser {
+export class PyTranspiler extends TranspilerSuper {
   corrections;
   
   constructor() {
@@ -19,7 +19,8 @@ export class PyParser extends Parser {
     for (let key of Object.keys(this.corrections)) {
       this.buffer.replace(key, this.corrections[key]);
     }
-    return code;
+    let regex = / (\w+)\.length/gi;
+    return code.replace(regex, 'len($1)');
   }
 
   ExpressionStatement(node) {
@@ -34,13 +35,7 @@ export class PyParser extends Parser {
 
   FunctionDeclaration(node) {
     this.buffer.add("def ");
-    this.parse(node.id);
-    this.buffer.add("(");
-    for (let i = 0; i < node.params.length; i++) {
-      this.parse(node.params[i]);
-    }
-    this.buffer.add(")");
-    this.parse(node.body);
+    super.FunctionDeclaration(node);
   }
 
   ReturnStatement(node) {
