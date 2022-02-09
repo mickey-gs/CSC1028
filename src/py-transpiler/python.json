@@ -1,5 +1,6 @@
 {
   "true": "True",
   "false": "False",
-  "else if": "elif"
+  "else if": "elif",
+  "console.log": "print"
 }
