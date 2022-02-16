@@ -61,3 +61,30 @@ Woke up early this morning to do some extra work before the meeting. I created a
 I think that with adding array support that this should be very close to being 'good enough' to write across different programming languages. The one thing I would like to add support for is structs, because I think that should bring my program pretty close to the functionality of C- a language used for 'real work' all the time. 
 
 I saw my mark for deliverable 1 a short while before joining the meeting. I'm disappointed, but I can understand why it was marked the way it was. I did feel very unsure about what direction I would take with it, and didn't pay enough attention to the assessment criteria, so I can see where the mark came from. I think that for the second deliverable I would be more likely to rewrite the first deliverable completely before building anything on top of it. I would refocus to be more instructive- *how* to write programs simply, not just a piece looking at the upsides and downsides of doing so. At least I know how to approach the next deliverables, and should be able to do better in them.
+
+Sunday, 13th February 2021
+Because I'll end up having to largely rewrite deliverable 1 (both to build on it for deliverable 2 and because I'm not happy with the standard of it, if my work is going to be public), I researched what other people had already contributed to the topic of writing portable code. Most resources seem to be focused on code portable between different platforms:
+https://medium.com/trueface-ai/how-to-design-a-language-agnostic-cross-platform-computer-vision-sdk-e437ecac8b4e (about writing an SDK that works across different architectures)
+https://pontus.digipen.edu/~mmead/www/docs/WritingPortableCode.pdf (extremely in-depth look at writing code across platforms and compilers. Particular to C, C++, and game development, with a look at Java at the end)
+These articles aren't about exactly the same topic as what I'm writing about, but there is still some valuable information in both. The Medium article is a great look at how to package software libraries, which will come in handy later in the project, and both give advice on how to separate platform-specific code from the general program logic, which is demonstrative on how I should be structuring my own program to generate code.
+There best resource by far that I found on language agnosticism is this one:
+https://github.com/mankenavenkatesh/Language-Agnosticism
+A Github repo that aggregates other resources, and is designed to teach language agnosticism. I'll likely be basing my deliverable on some of the content and there, and trying to condense it into a more approachable article thatn a full course of content.
+I'll spend up until the meeting this week planning what I want to write my deliverable to say, and then do the actual rewriting the next week, at the same time as starting to look at the next deliverable.
+
+Monday, 14th February, 2021
+Decided to do some work with the transpilers today. I've looked into it, and libraries exist for converting Python into and out of AST, and for at least converting Ruby into AST (not sure if it can be converted back into code, however). Frustratingly, none of these seem to use the same external standard, which to me kind of defeats the purpose of creating abstract syntax trees, but at least they exist. They're open source as well so hopefully I can customise them to accept the standard used by acorn.js.
+Speaking of, I've ran into an issue with acorn.js- it doesn't seem to be able to parse import statements properly. There's some shenanigans where the parser throws an error if I use the class method #parse, but if I use the instance method #parse it returns an undefined value instead of throwing an error. It took a lot of the day to track down the issue to something as specific as this, and there doesn't seem to be anyone else online who's ran into the same issue. If I can't resolve this I'll try using Babel's parser, but this has been very frustrating, discovering an issue like this so far into the project.
+
+Tuesday, 15th February, 2021
+In order to see if its viable to generate visual programs in different languages, I decided I had to become familiar with Electron, which seemed to me the most high-level and viable candidate for GUIs. I spent the day writing a game in Electron to get used to it (Pong for two players), and I enjoyed how similar to JS web development it was, particularly as there was no need to interact with a very library-specific renderer or window object, which is by far the least standard part of GUI development and therefore the part with the steepest learning curve.
+
+I've looked into using Electron with other languages, and it seems like there are several different options for implementing a back-end to a visual Electron program in languages other than JS. The most viable ones seem to be either outputting the finished program as a local web application and communicating with it via HTTP requests, or using sockets for inter-process communication.
+I'll look into these in the next week and see if I can write an Electron program with a Python back-end.
+
+Wednesday, 16th February, 2021
+Just writing a quick plan for the next week so I can clarify what I want to work on this week. I would like to:
+1. Write a Python program that can control an Electron GUI (most likely, by re-implementing my earlier Pong game)
+2. Try to resolve my issues with using import statements
+3. Rewrite deliverable 1 (ideally in full, but at least partially)
+4. Start planning deliverable 2

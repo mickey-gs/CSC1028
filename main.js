@@ -8,7 +8,6 @@ if (!fs.existsSync("./outputs")) {
   fs.mkdirSync("./outputs")
 } 
 
-var contents = fs.readFileSync(process.argv[process.argv.length - 1]).toString();
 var ast = acorn.parse(contents, {ecmaVersion: 2020});
 console.log("ORIGINAL:");
 console.log(contents + "\n");
