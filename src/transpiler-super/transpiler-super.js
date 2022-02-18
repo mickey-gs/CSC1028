@@ -124,6 +124,22 @@ export class TranspilerSuper {
     }
   }
 
+  ConditionalExpression(node) {
+    this.buffer.add("(");
+    this.parse(node.test);
+    this.buffer.add(" ? ");
+    this.parse(node.consequent);
+    this.buffer.add(" : ");
+    this.parse(node.alternate);
+    this.buffer.add(")");
+  }
+
+  LogicalExpression(node) {
+    this.parse(node.left);
+    this.buffer.add(' ' + node.operator + ' ');
+    this.parse(node.right);
+  }
+
   IfStatement(node) {
     this.buffer.add("if ");
     this.parse(node.test);

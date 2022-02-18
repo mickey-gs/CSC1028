@@ -88,3 +88,7 @@ Just writing a quick plan for the next week so I can clarify what I want to work
 2. Try to resolve my issues with using import statements
 3. Rewrite deliverable 1 (ideally in full, but at least partially)
 4. Start planning deliverable 2
+
+Friday, 18th February, 2021
+Started work on a test files folder. This is meant to provide an outline to potential users of the features provided by this project, as well as help structure the development of further transpilers if other developers want to contribute. 
+I've also added ternary statements in each language, as well as logical expressions (and, or, etc.).
