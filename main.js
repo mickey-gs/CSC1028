@@ -13,20 +13,22 @@ var ast = acorn.parse(contents, {ecmaVersion: 2020});
 console.log("ORIGINAL:");
 console.log(contents + "\n");
 
+let parsed;
+
 let jsTranspiler = new JSTranspiler;
 console.log("JAVASCRIPT OUTPUT:");
-console.log(jsTranspiler.parse(ast));
-jsTranspiler.clear();
-fs.writeFileSync("./outputs/js.js", jsTranspiler.parse(ast));
+parsed = jsTranspiler.parse(ast);
+console.log(parsed);
+fs.writeFileSync("./outputs/js.js", parsed);
 
 let pyTranspiler = new PyTranspiler;
 console.log("PYTHON OUTPUT:");
-console.log(pyTranspiler.parse(ast));
-pyTranspiler.clear();
-fs.writeFileSync("./outputs/py.py", pyTranspiler.parse(ast));
+parsed = pyTranspiler.parse(ast);
+console.log(parsed);
+fs.writeFileSync("./outputs/py.py", parsed);
 
 let rubyTranspiler = new RubyTranspiler;
 console.log("RUBY OUTPUT: ");
-console.log(rubyTranspiler.parse(ast));
-rubyTranspiler.clear();
-fs.writeFileSync("./outputs/rb.rb", rubyTranspiler.parse(ast));
+parsed = rubyTranspiler.parse(ast);
+console.log(parsed);
+fs.writeFileSync("./outputs/rb.rb", parsed);
