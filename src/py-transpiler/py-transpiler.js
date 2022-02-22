@@ -19,11 +19,22 @@ export class PyTranspiler extends TranspilerSuper {
     for (let key of Object.keys(this.corrections)) {
       this.buffer.replace(key, this.corrections[key]);
     }
+
+    // let imports = this.corrections.imports;
+    // for (let imp of imports) {
+    //   if (!this.buffer.get().find(`import ${imp}`)) {
+    //     this.buffer.prepend(`import ${imp}\n\n`)
+    //   }
+    // }
     let regex = /(\w+)\.length/gi;
     code = code.replace(regex, 'len($1)');
-    regex = /math\.cbrt\((.+)\)/gmi;
-    code = code.replace(regex, '($1)')
-    return code.replace(regex, '($1) ** (1. / 3)')
+    regex = /math.cbrt\(([^\)]+)\)/gm;
+    code = code.replace(regex, "(($1) ** (1. / 3))")
+
+    regex = /(\w+)\+\+/gmi
+    code = code.replace(regex, '$1 += 1')
+
+    return code
   }
 
   ExpressionStatement(node) {
@@ -66,5 +77,22 @@ export class PyTranspiler extends TranspilerSuper {
     this.buffer.add(" else ");
     this.parse(node.alternate);
     this.buffer.add(")");
+  }
+  
+  ForStatement(node) {
+    this.parse(node.init)
+    node.type = 'WhileStatement'
+    node.body.body.push(node.update)
+    this[node.type](node)
+  }
+
+  UpdateExpression(node) {
+    if (node.prefix) {
+      this.buffer.add(node.operator)
+    }
+    this.parse(node.argument)
+    if (!node.prefix) {
+      this.buffer.add(node.operator)
+    }
   }
 }

@@ -38,6 +38,7 @@ export class TranspilerSuper {
     }
     this.buffer.add(")");
     this.parse(node.body);
+    this.buffer.newline()
   }
 
   AssignmentExpression(node) {
@@ -143,7 +144,18 @@ export class TranspilerSuper {
   IfStatement(node) {
     this.buffer.add("if ");
     this.parse(node.test);
-    this.parse(node.consequent);
+
+    if (node.consequent.type != 'BlockStatement') {
+      let tempNode = {type: 'ReturnStatement'}
+      Object.assign(tempNode, node.consequent)
+      node.consequent.type = 'BlockStatement'
+      node.consequent.body = [tempNode]
+      this.parse(node.consequent)
+    }
+    else {
+      this.parse(node.consequent);
+    }
+
     if (node.alternate) {
       this.buffer.add("else ");
       this.parse(node.alternate);
@@ -155,6 +167,28 @@ export class TranspilerSuper {
     this.parse(node.test);
     this.buffer.add(")");
     this.parse(node.body);
+  }
+
+  ForStatement(node) {
+    this.buffer.add('for (')
+    this.parse(node.init)
+    this.buffer.trim()
+    this.buffer.add(' ')
+    this.parse(node.test)
+    this.buffer.add('; ')
+    this.parse(node.update)
+    this.buffer.add(')')
+    this.parse(node.body)
+  }
+
+  UpdateExpression(node) {
+    if (node.prefix) {
+      this.buffer.add(node.operator)
+    }
+    this.parse(node.argument)
+    if (!node.prefix) {
+      this.buffer.add(node.operator)
+    }
   }
 
   Identifier(node) {

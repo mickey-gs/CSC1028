@@ -44,6 +44,14 @@ export class Buffer {
     this.#buffer = temp.join("");
   }
 
+  deleteLines(lines) {
+    this.#buffer = this.#buffer.split('\n')
+    this.#buffer = this.#buffer.slice(0, this.#buffer.length - (lines + 1)).join('\n')
+    this.newline()
+
+    return this
+  }
+
   get() {
     return this.#buffer;
   }

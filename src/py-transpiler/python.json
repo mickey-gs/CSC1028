@@ -5,5 +5,9 @@
   "console.log": "print",
   "&&": "and",
   "||": "or",
-  "Math": "math"
+  "Math": "math",
+  "imports": [
+    "math",
+    "numpy"
+  ] 
 }

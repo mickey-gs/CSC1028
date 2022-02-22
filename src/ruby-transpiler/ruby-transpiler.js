@@ -19,7 +19,14 @@ export class RubyTranspiler extends TranspilerSuper {
     for (let key of Object.keys(this.corrections)) {
       this.buffer.replace(key, this.corrections[key]);
     }
-    return code;
+
+    let regex = /Math.floor\((.+)\)/gm
+    return code.replace(regex, '($1).floor');
+  }
+
+  ExpressionStatement(node) {
+    super.ExpressionStatement(node);
+    this.buffer.newline();
   }
 
   FunctionDeclaration(node) {
@@ -36,6 +43,17 @@ export class RubyTranspiler extends TranspilerSuper {
     this.buffer.newline();
     this.buffer.add("end");
     this.buffer.newline();
+  }
+
+  IfStatement(node) {
+    this.buffer.add("if ");
+    this.parse(node.test);
+    this.parse(node.consequent);
+    if (node.alternate) {
+      this.buffer.deleteLines(1);
+      this.buffer.add("else ");
+      this.parse(node.alternate);
+    }
   }
 
   VariableDeclaration(node) {
