@@ -89,27 +89,6 @@ export class RubyTranspiler extends TranspilerSuper {
     }
   }
 
-  IfStatement(node) {
-    this.buffer.add("if ");
-    this.recursiveParse(node.test);
-
-    if (node.consequent.type != 'BlockStatement') {
-      let tempNode = {type: 'ReturnStatement'}
-      Object.assign(tempNode, node.consequent)
-      node.consequent.type = 'BlockStatement'
-      node.consequent.body = [tempNode]
-      this.recursiveParse(node.consequent)
-    }
-    else {
-      this.recursiveParse(node.consequent);
-    }
-
-    if (node.alternate) {
-      this.buffer.add("else ");
-      this.recursiveParse(node.alternate);
-    }
-  }
-
   VariableDeclaration(node) {
     super.VariableDeclaration(node);
     this.buffer.newline();
