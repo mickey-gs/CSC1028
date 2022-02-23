@@ -25,6 +25,12 @@ export class PyTranspiler extends TranspilerSuper {
       this.buffer.replace(key, this.corrections[key]);
     }
 
+    for (const module of this.corrections.imports) {
+      if (code.search(module + '.') !== -1) {
+        code = 'import ' + module + '\n\n' + code
+      }
+    }
+
     let regex = /(\w+)\.length/gi;
     code = code.replace(regex, 'len($1)');
     regex = /math.cbrt\(([^\)]+)\)/gm;
