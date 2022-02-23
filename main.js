@@ -14,21 +14,28 @@ console.log("ORIGINAL:");
 console.log(contents + "\n");
 
 let parsed;
+let copyAst = {"type": 'idk'};
 
+
+Object.assign(copyAst, ast)
 let jsTranspiler = new JSTranspiler;
 console.log("JAVASCRIPT OUTPUT:");
-parsed = jsTranspiler.parse(ast);
+parsed = jsTranspiler.parse(copyAst);
 console.log(parsed);
 fs.writeFileSync("./outputs/js.js", parsed);
 
+Object.assign(copyAst, ast)
+ast = acorn.parse(contents, {ecmaVersion: 2020});
 let pyTranspiler = new PyTranspiler;
 console.log("PYTHON OUTPUT:");
-parsed = pyTranspiler.parse(ast);
+parsed = pyTranspiler.parse(copyAst);
 console.log(parsed);
 fs.writeFileSync("./outputs/py.py", parsed);
 
+Object.assign(copyAst, ast)
+ast = acorn.parse(contents, {ecmaVersion: 2020});
 let rubyTranspiler = new RubyTranspiler;
 console.log("RUBY OUTPUT: ");
-parsed = rubyTranspiler.parse(ast);
+parsed = rubyTranspiler.parse(copyAst);
 console.log(parsed);
 fs.writeFileSync("./outputs/rb.rb", parsed);

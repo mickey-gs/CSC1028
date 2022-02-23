@@ -10,18 +10,40 @@ export class RubyTranspiler extends TranspilerSuper {
   }
 
   parse(node) {
+    const code = this.recursiveParse(node)
+    return this.correct(code)
+  }
+
+  recursiveParse(node) {
     this[node.type](node);
-    let code = this.buffer.get();
-    return this.correct(code);
+    return this.buffer.get()
   }
   
   correct(code) {
-    for (let key of Object.keys(this.corrections)) {
-      this.buffer.replace(key, this.corrections[key]);
+    for (const key of Object.keys(this.corrections)) {
+      code = code.replace(new RegExp(key, 'gmi'), this.corrections[key]);
     }
 
     let regex = /Math.floor\((.+)\)/gm
-    return code.replace(regex, '($1).floor');
+    code = code.replace(regex, '($1).floor');
+
+    regex = /(\w+)\+\+/gmi
+    code = code.replace(regex, '$1 += 1')
+
+    code = code.replace(/puts\((.+)\)\n/gmi, (input, $1) => {
+      let args = $1.split(' + ')
+
+      for (let i = 0; i < args.length; i++) {
+        if (args[i][0] != '\'' && args[i][0] != '"') {
+          args[i] = '(' + args[i] + ')' + '.to_s'
+        }
+      }
+
+      return 'puts(' + args.join(' + ') + ')\n'
+    })
+
+
+    return code
   }
 
   ExpressionStatement(node) {
@@ -47,12 +69,44 @@ export class RubyTranspiler extends TranspilerSuper {
 
   IfStatement(node) {
     this.buffer.add("if ");
-    this.parse(node.test);
-    this.parse(node.consequent);
+    this.recursiveParse(node.test);
+    
+    if (node.consequent.type != 'BlockStatement') {
+      let tempNode = {type: 'ReturnStatement'}
+      Object.assign(tempNode, node.consequent)
+      node.consequent.type = 'BlockStatement'
+      node.consequent.body = [tempNode]
+      this.recursiveParse(node.consequent)
+    }
+    else {
+      this.recursiveParse(node.consequent);
+    }
+    
     if (node.alternate) {
       this.buffer.deleteLines(1);
       this.buffer.add("else ");
-      this.parse(node.alternate);
+      this.recursiveParse(node.alternate);
+    }
+  }
+
+  IfStatement(node) {
+    this.buffer.add("if ");
+    this.recursiveParse(node.test);
+
+    if (node.consequent.type != 'BlockStatement') {
+      let tempNode = {type: 'ReturnStatement'}
+      Object.assign(tempNode, node.consequent)
+      node.consequent.type = 'BlockStatement'
+      node.consequent.body = [tempNode]
+      this.recursiveParse(node.consequent)
+    }
+    else {
+      this.recursiveParse(node.consequent);
+    }
+
+    if (node.alternate) {
+      this.buffer.add("else ");
+      this.recursiveParse(node.alternate);
     }
   }
 
@@ -65,5 +119,22 @@ export class RubyTranspiler extends TranspilerSuper {
     this.buffer.add("return ");
     super.ReturnStatement(node);
     this.buffer.newline();
+  }
+
+  ForStatement(node) {
+    this.recursiveParse(node.init)
+    node.type = 'WhileStatement'
+    node.body.body.push(node.update)
+    this[node.type](node)
+  }
+
+  UpdateExpression(node) {
+    if (node.prefix) {
+      this.buffer.add(node.operator)
+    }
+    this.recursiveParse(node.argument)
+    if (!node.prefix) {
+      this.buffer.add(node.operator)
+    }
   }
 }

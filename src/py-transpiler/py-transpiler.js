@@ -10,6 +10,11 @@ export class PyTranspiler extends TranspilerSuper {
   }
 
   parse(node) {
+    return this.recursiveParse(node)
+  }
+
+  recursiveParse(node) {
+    if (node.type == 'ForStatement') console.log(node.type)
     this[node.type](node);
     let code = this.buffer.get();
     return this.correct(code);
@@ -20,12 +25,6 @@ export class PyTranspiler extends TranspilerSuper {
       this.buffer.replace(key, this.corrections[key]);
     }
 
-    // let imports = this.corrections.imports;
-    // for (let imp of imports) {
-    //   if (!this.buffer.get().find(`import ${imp}`)) {
-    //     this.buffer.prepend(`import ${imp}\n\n`)
-    //   }
-    // }
     let regex = /(\w+)\.length/gi;
     code = code.replace(regex, 'len($1)');
     regex = /math.cbrt\(([^\)]+)\)/gm;
@@ -33,6 +32,18 @@ export class PyTranspiler extends TranspilerSuper {
 
     regex = /(\w+)\+\+/gmi
     code = code.replace(regex, '$1 += 1')
+
+    code = code.replace(/print\((.+)\)\n/gmi, (input, $1) => {
+      let args = $1.split(' + ')
+
+      for (let i = 0; i < args.length; i++) {
+        if (args[i][0] != '\'' && args[i][0] != '"') {
+          args[i] = 'str(' + args[i] + ')'
+        }
+      }
+
+      return 'print(' + args.join(' + ') + ')\n'
+    })
 
     return code
   }
@@ -71,16 +82,16 @@ export class PyTranspiler extends TranspilerSuper {
 
   ConditionalExpression(node) {
     this.buffer.add("(");
-    this.parse(node.consequent);
+    this.recursiveParse(node.consequent);
     this.buffer.add(" if ");
-    this.parse(node.test);
+    this.recursiveParse(node.test);
     this.buffer.add(" else ");
-    this.parse(node.alternate);
+    this.recursiveParse(node.alternate);
     this.buffer.add(")");
   }
   
   ForStatement(node) {
-    this.parse(node.init)
+    this.recursiveParse(node.init)
     node.type = 'WhileStatement'
     node.body.body.push(node.update)
     this[node.type](node)
@@ -90,7 +101,7 @@ export class PyTranspiler extends TranspilerSuper {
     if (node.prefix) {
       this.buffer.add(node.operator)
     }
-    this.parse(node.argument)
+    this.recursiveParse(node.argument)
     if (!node.prefix) {
       this.buffer.add(node.operator)
     }

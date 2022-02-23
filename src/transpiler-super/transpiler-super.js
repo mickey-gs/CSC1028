@@ -12,73 +12,77 @@ export class TranspilerSuper {
   }
 
   parse(node) {
+    return this.recursiveParse(node)
+  }
+
+  recursiveParse(node) {
     this[node.type](node);
     return this.buffer.get();
   }
 
   Program(node) {
       for (let i = 0; i != node.body.length; i++) {
-        this.parse(node.body[i]);
+        this.recursiveParse(node.body[i]);
       }
     }
 
   ExpressionStatement(node) {
-    this.parse(node.expression);
+    this.recursiveParse(node.expression);
   }
 
   FunctionDeclaration(node) {
-    this.parse(node.id);
+    this.recursiveParse(node.id);
     this.buffer.add("(");
     if (node.params.length != 0) {
-      this.parse(node.params[0]);
+      this.recursiveParse(node.params[0]);
       for (let i = 1; i < node.params.length; i++) {
         this.buffer.add(", ");
-        this.parse(node.params[i]);
+        this.recursiveParse(node.params[i]);
       }
     }
     this.buffer.add(")");
-    this.parse(node.body);
+    this.recursiveParse(node.body);
     this.buffer.newline()
   }
 
   AssignmentExpression(node) {
-    this.parse(node.left);
+    this.recursiveParse(node.left);
     this.buffer.add(" ");
     this.buffer.add(node.operator);
     this.buffer.add(" ");
-    this.parse(node.right);
+    this.recursiveParse(node.right);
   }
 
   BlockStatement(node) {
     for (let i = 0; i < node.body.length; i++) {
-      this.parse(node.body[i]);
+      this.recursiveParse(node.body[i]);
     }
   }
 
   VariableDeclaration(node) {
     for (let i = 0; i < node.declarations.length; i++) {
-      this.parse(node.declarations[i]);
+      this.recursiveParse(node.declarations[i]);
     }
   }
 
   VariableDeclarator(node) {
-    this.parse(node.id);
+    this.recursiveParse(node.id);
     this.buffer.add(" = ");
-    this.parse(node.init);
+    this.recursiveParse(node.init);
   }
 
   ReturnStatement(node) {
-    this.parse(node.argument);
+    this.recursiveParse(node.argument);
   }
 
   CallExpression(node) {
-    this.parse(node.callee);
+    this.recursiveParse(node.callee);
     this.buffer.add("(");
     if (node.arguments.length > 0) {
-      this.parse(node.arguments[0]);
+      this.recursiveParse(node.arguments[0]);
       for (let i = 1; i != node.arguments.length; i++) {
         this.buffer.add(", ");
-        this.parse(node.arguments[i])
+        this.recursiveParse(node.arguments[i])
       }
     }
     this.buffer.add(")");
@@ -99,93 +103,93 @@ export class TranspilerSuper {
 
   UnaryExpression(node) {
     if (node.prefix) this.buffer.add(node.operator);
-    this.parse(node.argument);
+    this.recursiveParse(node.argument);
     if (!(node.prefix)) this.buffer.add(node.operator);
   }
 
   BinaryExpression(node) {
     if (node.left.type == "BinaryExpression") {
       this.buffer.add("(");
-      this.parse(node.left);
+      this.recursiveParse(node.left);
       this.buffer.add(")");
     }
     else {
-      this.parse(node.left);
+      this.recursiveParse(node.left);
     }
     this.buffer.add(" ");
     this.buffer.add(node.operator);
     this.buffer.add(" ");
     if (node.right.type == "BinaryExpression") {
       this.buffer.add("(");
-      this.parse(node.right);
+      this.recursiveParse(node.right);
       this.buffer.add(")");
     }
     else {
-      this.parse(node.right);
+      this.recursiveParse(node.right);
     }
   }
 
   ConditionalExpression(node) {
     this.buffer.add("(");
-    this.parse(node.test);
+    this.recursiveParse(node.test);
     this.buffer.add(" ? ");
-    this.parse(node.consequent);
+    this.recursiveParse(node.consequent);
     this.buffer.add(" : ");
-    this.parse(node.alternate);
+    this.recursiveParse(node.alternate);
     this.buffer.add(")");
   }
 
   LogicalExpression(node) {
-    this.parse(node.left);
+    this.recursiveParse(node.left);
     this.buffer.add(' ' + node.operator + ' ');
-    this.parse(node.right);
+    this.recursiveParse(node.right);
   }
 
   IfStatement(node) {
     this.buffer.add("if ");
-    this.parse(node.test);
+    this.recursiveParse(node.test);
 
     if (node.consequent.type != 'BlockStatement') {
       let tempNode = {type: 'ReturnStatement'}
       Object.assign(tempNode, node.consequent)
       node.consequent.type = 'BlockStatement'
       node.consequent.body = [tempNode]
-      this.parse(node.consequent)
+      this.recursiveParse(node.consequent)
     }
     else {
-      this.parse(node.consequent);
+      this.recursiveParse(node.consequent);
     }
 
     if (node.alternate) {
       this.buffer.add("else ");
-      this.parse(node.alternate);
+      this.recursiveParse(node.alternate);
     }
   }
 
   WhileStatement(node) {
     this.buffer.add("while (");
-    this.parse(node.test);
+    this.recursiveParse(node.test);
     this.buffer.add(")");
-    this.parse(node.body);
+    this.recursiveParse(node.body);
   }
 
   ForStatement(node) {
     this.buffer.add('for (')
-    this.parse(node.init)
+    this.recursiveParse(node.init)
     this.buffer.trim()
     this.buffer.add(' ')
-    this.parse(node.test)
+    this.recursiveParse(node.test)
     this.buffer.add('; ')
-    this.parse(node.update)
+    this.recursiveParse(node.update)
     this.buffer.add(')')
-    this.parse(node.body)
+    this.recursiveParse(node.body)
   }
 
   UpdateExpression(node) {
     if (node.prefix) {
       this.buffer.add(node.operator)
     }
-    this.parse(node.argument)
+    this.recursiveParse(node.argument)
     if (!node.prefix) {
       this.buffer.add(node.operator)
     }
@@ -205,10 +209,10 @@ export class TranspilerSuper {
       this.buffer.add("]");
       return;
     }
-    this.parse(node.elements[0]);
+    this.recursiveParse(node.elements[0]);
     for (let i = 1; i < node.elements.length; i++) {
       this.buffer.add(", ");
-      this.parse(node.elements[i]);
+      this.recursiveParse(node.elements[i]);
     }
     this.buffer.add("]");
   }

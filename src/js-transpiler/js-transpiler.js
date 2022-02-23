@@ -5,6 +5,10 @@ export class JSTranspiler extends TranspilerSuper {
     super();
   }
 
+  parse(node) {
+    return this.recursiveParse(node)
+  }
+
   ExpressionStatement(node) {
     super.ExpressionStatement(node);
     this.buffer.add(";");
@@ -43,12 +47,12 @@ export class JSTranspiler extends TranspilerSuper {
 
   IfStatement(node) {
     this.buffer.add("if (");
-    this.parse(node.test);
+    this.recursiveParse(node.test);
     this.buffer.add(")");
-    this.parse(node.consequent);
+    this.recursiveParse(node.consequent);
     if (node.alternate) {
       this.buffer.add("else ");
-      this.parse(node.alternate);
+      this.recursiveParse(node.alternate);
     }
   }
 }
