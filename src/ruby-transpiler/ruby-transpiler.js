@@ -27,21 +27,6 @@ export class RubyTranspiler extends TranspilerSuper {
     let regex = /Math.floor\((.+)\)/gm
     code = code.replace(regex, '($1).floor');
 
-    regex = /(\w+)\+\+/gmi
-    code = code.replace(regex, '$1 += 1')
-
-    code = code.replace(/puts\((.+)\)\n/gmi, (input, $1) => {
-      let args = $1.split(' + ')
-
-      for (let i = 0; i < args.length; i++) {
-        if (args[i][0] != '\'' && args[i][0] != '"') {
-          args[i] = '(' + args[i] + ')' + '.to_s'
-        }
-      }
-
-      return 'puts(' + args.join(' + ') + ')\n'
-    })
-
     let higherOrderFuncs = {}
     code = code.replace(/def (\w+)\(.+\)\n(.+\n)+/gmi, (def, $1) => {
         let funcDeclaration = def.matchAll(/def \w+\((.+)\)/gmi)
@@ -68,6 +53,8 @@ export class RubyTranspiler extends TranspilerSuper {
         }
         replacer.i += 1
 
+        console.log(param)
+
         if (replacer.i == higherOrderFuncs[func]) {
           return 'method(:' + param + ')'
         }
@@ -75,10 +62,25 @@ export class RubyTranspiler extends TranspilerSuper {
         return param
       }
 
-      code = code.replace(new RegExp(`^(?!.*def)(.+${func})\(([^\)]+)\)`, 'gmi'), (match, func, params) => {
-        return func  + params.replace(/([^\s,]+\(.+?\))|([^\s,]+)/gmi, replacer)
+      code = code.replace(/(.*(?<!def\s)mathematics\()((\w+(\([^()]+\))?(,\s)?)+)(\).+)/gmi, (match, preceding, params, opt1, opt2, opt3, following) => {
+        return preceding + params.replace(/\w+(\(.+\))?/gmi, replacer) + following
       })
     }
+
+    regex = /(\w+)\+\+/gmi
+    code = code.replace(regex, '$1 += 1')
+
+    code = code.replace(/puts\((.+)\)\n/gmi, (input, $1) => {
+      let args = $1.split(' + ')
+
+      for (let i = 0; i < args.length; i++) {
+        if (args[i][0] != '\'' && args[i][0] != '"') {
+          args[i] = '(' + args[i] + ')' + '.to_s'
+        }
+      }
+
+      return 'puts(' + args.join(' + ') + ')\n'
+    })
 
     return code
   }
