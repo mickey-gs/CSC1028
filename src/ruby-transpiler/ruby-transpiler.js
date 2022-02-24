@@ -42,6 +42,43 @@ export class RubyTranspiler extends TranspilerSuper {
       return 'puts(' + args.join(' + ') + ')\n'
     })
 
+    let higherOrderFuncs = {}
+    code = code.replace(/def (\w+)\(.+\)\n(.+\n)+/gmi, (def, $1) => {
+        let funcDeclaration = def.matchAll(/def \w+\((.+)\)/gmi)
+        for (const parameterList of funcDeclaration) {
+          let params = parameterList[1].matchAll(/([^\s,]+\(.+?\))|([^\s,]+)/gmi)
+          
+          let pos = 0
+          for (const param of params) {
+            if (def.indexOf(param[0] + '\(') != -1) {
+                def = def.replace(param[0] + '(', param[0] + '.call(')
+                higherOrderFuncs[$1] = pos
+            }
+            pos++
+          }
+        }
+
+        return def
+    })
+
+    for (const func of Object.keys(higherOrderFuncs)) {
+      function replacer(param) {
+        if (typeof(replacer.i) == 'undefined') {
+          replacer.i = -1
+        }
+        replacer.i += 1
+
+        if (replacer.i == higherOrderFuncs[func]) {
+          return 'method(:' + param + ')'
+        }
+
+        return param
+      }
+
+      code = code.replace(new RegExp(`^(?!.*def)(.+${func})\(([^\)]+)\)`, 'gmi'), (match, func, params) => {
+        return func  + params.replace(/([^\s,]+\(.+?\))|([^\s,]+)/gmi, replacer)
+      })
+    }
 
     return code
   }
