@@ -53,8 +53,6 @@ export class RubyTranspiler extends TranspilerSuper {
         }
         replacer.i += 1
 
-        console.log(param)
-
         if (replacer.i == higherOrderFuncs[func]) {
           return 'method(:' + param + ')'
         }
@@ -62,7 +60,7 @@ export class RubyTranspiler extends TranspilerSuper {
         return param
       }
 
-      code = code.replace(/(.*(?<!def\s)mathematics\()((\w+(\([^()]+\))?(,\s)?)+)(\).+)/gmi, (match, preceding, params, opt1, opt2, opt3, following) => {
+      code = code.replace(new RegExp(`(.*(?<!def\\s)${func}\\()(([^()]+(\\([^()]+\\))?(,\\s)?)+)(\\).+)`, 'gmi'), (match, preceding, params, opt1, opt2, opt3, following) => {
         return preceding + params.replace(/\w+(\(.+\))?/gmi, replacer) + following
       })
     }
@@ -75,7 +73,7 @@ export class RubyTranspiler extends TranspilerSuper {
 
       for (let i = 0; i < args.length; i++) {
         if (args[i][0] != '\'' && args[i][0] != '"') {
-          args[i] = '(' + args[i] + ')' + '.to_s'
+          args[i] = '(' + args[i] + ').to_s'
         }
       }
 
