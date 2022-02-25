@@ -62,7 +62,7 @@ export class RubyTranspiler extends TranspilerSuper {
         return param
       }
 
-      code = code.replace(/(.*(?<!def\s)mathematics\()((\w+(\([^()]+\))?(,\s)?)+)(\).+)/gmi, (match, preceding, params, opt1, opt2, opt3, following) => {
+      code = code.replace(new RegExp(`(.*(?<!def\\s)${func}\\()((\\w+(\\([^()]+\\))?(,\\s)?)+)(\\).+)`, 'gmi'), (match, preceding, params, opt1, opt2, opt3, following) => {
         return preceding + params.replace(/\w+(\(.+\))?/gmi, replacer) + following
       })
     }
