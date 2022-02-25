@@ -14,7 +14,6 @@ export class PyTranspiler extends TranspilerSuper {
   }
 
   recursiveParse(node) {
-    if (node.type == 'ForStatement') console.log(node.type)
     this[node.type](node);
     let code = this.buffer.get();
     return this.correct(code);
