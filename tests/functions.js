@@ -4,9 +4,9 @@ function add(num1, num2) {
     return num1 + num2 
 }
 
-function print(value) {
+function printValue(value) {
     console.log(value)
 }
 
-print(50)
+printValue(50)
 console.log(add(10, 20))
