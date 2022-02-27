@@ -24,7 +24,7 @@
             }
 
             p {
-                font-size: 120%;
+                font-size: 1.4em;
                 padding-bottom: 5px;
             }
 
@@ -75,14 +75,19 @@
 
             .codeSnippet {
                 font-family: monospace;
-                font-size: 120%;
-                background-color: black;
-                color: white;
-                width: fit-content;
+                font-size: 1.5em;
+                background-color: lightgray;
+                width: auto;
+                min-width: 100%;
                 line-height: 1em;
                 padding: 3px;
                 margin-top: 20px;
                 margin-bottom: 20px;
+            }
+
+            .inlineCode {
+                background-color: lightgray;
+                font-family: monospace;
             }
         </style>
     </head>
@@ -90,109 +95,221 @@
     <body>
         <div id="wrapper">
             <div id="sidebar">
-                <ul>
-                    <li><a href="#introduction">Introduction</a></li>
-                    <li><a href="#good">The Good</a></li>
-                    <li><a href="#bad">The Bad</a></li>
-                    <li><a href="#ugly">The Ugly</a></li>
-                    <li><a href="#simple">Simple Code</a></li>
-                    <li><a href="#notSimple">When Should Code Not be Simple?</a></li>
-                    <li><a href="#conclusion">Conclusion</a></li>
-                </ul>
+                
             </div>
             <div id="main">
                 <h1>
-                    A Short Guide to Every<a id="asterisk" href="#disclaimer">*</a> Programming Language
+                    How to Write Language Agnostic Code
                 </h1>
-                <br>
-                <h2 id="introduction">Introduction</h2>
+
+                <h2>Introduction</h2>
                 <p>
-                    A common phrase to hear when learning a language is 'idiomatic code' — writing code in a style considered to be common to or appropriate for that language. This is encouraged not only to create a sense of cohesion in code written in a certain language, improving readability, but to create a sort of aesthetic unity in written programs. This piece will briefly examine the differences in use and usefulness of complex code, idiomatic code, and 'ugly' code.
+                    This guide is intended to teach developers how to write code that is easily portable among a subset of modern, widely-used programming languages. This is a vital skill to have in the early stages of working on a project, as writing language-agnostic code reduces technical debt. The developer is then granted much more freedom and versatility in what language they continue their development in, as it does not take as much work to port generic code as it does idiomatic code.<br>
+                    This guide starts with the basics of several languages in wide use (namely, C++, Java, JavaScript, Python, and Ruby, which I have enough experience in to discuss), and begins by outlining the features that make them Turing complete. The guide will then expand on the features that they share, and their more advanced features, which may differ greatly.
                 </p>
 
-                <h2 id="good">The Good</h2>
+                <h2>Turing Completeness</h2>
                 <p>
-                    Idiomatic code looks really nice. Complex program logic which would normally take up quite a few lines for very standard program logic can be condensed to just a handful of statements. For example, let's say we're writing some data processing code in Ruby. We have an array of readings from a temperature sensor, and we want to find the mean of those readings, while filtering out outliers caused by the sensor malfunctioning.</p>
-                    <pre class="codeSnippet">
-// readings = [20.57, 27.68, 25.32, 23.60, 20.30, 22.47, 20.78, 28.40, 9999999.99, 24.03, 24.41, ...]
-
-mean = readings.select { |e| e &lt;= 100 }.sum / readings.length</pre>
-                <p>
-                    This is nice and concise — and perfectly legible to programmers familiar to Ruby — but has some issues. The code in curly braces (known as a block) may be unfamiliar even to programmers with knowledge of anonymous functions, especially with the strange syntax of passing in a parameter with the vertical bar (also known as pipe) symbol. Additionally, method chaining following a block may be visually confusing, as most developers would be used to a method call with brackets, not braces — and the chained method call (sum) doesn't even use brackets!
+                    For a programming language to be Turing complete, it must allow for conditional branching and the use of arbritrary amounts of memory. Almost all languages allow for conditional branching in at least the form of if/else statements, which are implemented in a fairly standard way. MENTION GOTO<br>
+                    C++, Java and JavaSript all have identical syntax for this:
                 </p>
+                <pre class="codeSnippet">
+if (condition1) {
+    executeSomeCode();
+}
+else if (condition2) {
+    executeOtherCode();
+}
+else {
+    executeThis();
+}
+                </pre>
 
-                <h2 id="bad">The Bad</h2>
                 <p>
-                    The issue comes when trying to write complex code in an 'idiomatic' way. The earlier example is not too diffcult for a programmer to wrap their head around, especially with a quick visit to Google, but imagine an entire codebase written in that style.     
+                    This code will work identically in all three languages, as they are all directly based off of the syntax of C. Python and Ruby, which have different keywords and different syntax for blocks, are written <em>slightly</em> differently:<br>
+                    Ruby:
                 </p>
-                <p>
-                    It's undoubtedly preferable for experienced Ruby developers in an environment where Ruby will definitely be the project's main language. However, with less experienced developers or the possibility that the project will need to change to or be used in a different language, this focus on idiomatic code can seriously hamper portability and limit the developers' options via technical debt. Additionally, an internal focus on making code idiomatic and making the aesthetics of the code conform to what basically amounts to a style guide can often get in the way of 'real' programming work — debugging, adding features, refactoring old code. That's not to say that idiomatic code is a bad thing, or should always be avoided, but that it is important to recognise that having code that works and is legible is more important than code that looks nice. 
-
-                <h2 id="ugly">The Ugly</h2>
-                <p>
-                    And this is the reason for 'ugly' code. At the start of a project, when the programmer isn't sure what language to be using, or when code needs to be accessible, writing basic, portable code can be very valuable. It helps to maintain language agnosticism, and stops the programmer from being locked into using a certain language or even version of a language by technical debt. It can also help avoid procrastination by trying to make code look as idiomatic or concise as possible, a trap I have myself fallen into many times. For example, we can write our example earlier as:
-                </p>
-                    <pre class="codeSnippet">
-// readings = [20.57, 27.68, 25.32, 23.60, 20.30, 22.47, 20.78, 28.40, 9999999.99, 24.03, 24.41, ...]
-
-// find mean by looping through array, adding up non-outliers and dividing by array length
-i = 0
-while (i &lt; readings.length)
-    mean += readings[i] if readings[i] &lt;= 100 
-    i += 1
+                <pre class="codeSnippet">
+if condition1 
+    executeSomeCode();
+elsif condition2 
+    executeOtherCode();
+else 
+    executeThis();
 end
-mean = mean / readings.length</pre>
-                <p>
-                    The purpose of the code may be a little bit more obtuse due to its length, but with a comment it can be quickly understood.
-                </p>
-                <p>
-                    More importantly, this code is <em>portable</em> — it can be easily rewritten in most commonly-used imperative languages, making the project very versatile in terms of technology. It also makes the code very widely understandable, as almost anyone with any programming experience will understand all aspects of the code with speed.
-                </p>
+                </pre>
 
-                <h2 id="simple">Simple Code</h2>
-                <p>
-                    But if we're trying to avoid complexity, then how much should functionality should we take away from ourselves?
-                    The requirements for a Turing complete programming language are really very minimal. One could be constructed from just assignment operations (increment, decrement and assigning to and from memory locations), conditional execution control and jump instructions. Indeed, before the advent of higher level languages such as C, many programs <em>were</em> written at this level, or slightly above it in the form of assembly code.
-                </p>
-                <p>
-                    Needless to say, this would be a very miserable way to have to write every program. The challenge, then, is trying to decide what minimum set of features are needed to make programming as painless as possible without going too far back into complexity.
-                </p>
-                <p>
-                    Thankfully, this work has already been done! <a href="https://dotlang.org/", target="blank">dotLang</a> is a minimalist programming language, and serves as a good example for how to go about defining this sort of standard. It is imperative, garbage collected and statically-typed, so users don't have to worry about memory management or types changing at runtime. It also features structs, first-class functions and common structures like lists and hash maps, so there is a comfortable level of abstraction to ease development. It's an imperative language, however, which does mean that a programmer using it would either have to be familiar with using recursion instead of loops, or get used to the idea very quickly.
-                </p>
-                <p>
-                    The key idea behind dotLang is that the programmer shouldn't have to worry about his choice of tool getting in the way- it should provide the functionality needed and no more. dotLang's philosophy is that if the user needs more complicated concepts from their language, they can implement that themselves — there's even <a href="https://dotlang.org/howto", target="blank">a section on dotLang's website</a> for how to implement advanced but commonly-used concepts.
-                </p>
+                <p>Python:</p>
+<pre class="codeSnippet">
+if condition1:
+    executeSomeCode();
+elif condition2: 
+    executeOtherCode();
+else:
+    executeThis();
 
-                <h2 id="notSimple">When Should Code <em>Not</em> Be Simple?</h2>
-                <p>
-                    Abstractions are, by defintion, extremely useful for reducing complexity in software. They hide complexity from the user, meaning they only have to worry about implementation. This can be useful in, for example, a very large enterprise application where it isn't feasible to facilitate consistent communication between all the developers; instead of everyone needing to know everything about the entire codebase, individual teams or devs can work on implementing an object with a well-defined interface. The devs using this object do not need to understand its internals, and reducing it to an abstraction makes its incorporation into the application much easier. Additionally, maintaining these abstract, well-defined and -documented interfaces is very important for a project that may be built on for many years, long after the original developers have moved on.
-                </p>
-                <p>
-                    On the other hand, there have been large projects where knowing the entire internals of the program were necessary — in early video game development, when games were written in rudimentary assembly and optimisation was key, memory was controlled to such a level that it was common for entities (sprites, audio etc.) and functions to have their addresses in memory hardcoded, and to reference these directly by their address.
-                </p>
-                <p>
-                    Nowadays, technology is cheap enough that this level of optimisation is often not required, but sacrificing the ease of abstraction to gain higher performance or more low-level control over a program's control is still sometimes necessary. 
-                </p>
-                    <!-- Add something about modern low-level systems, like
-                    maybe that missile thing from the Matt Parker book. Either way this is nearly done. Finish off with like "abstraction is sometimes good and sometimes bad. Be wise with its use, not dogmatic, or it loses its use."-->
-                <h2 id="conclusion">Conclusion</h2>
-                <p>
-                    It's fairly clear that abstractions, including language-specific ones, can serve a valuable purpose in reducing the complexity with which program logic must be written out. The main point I would like to make with this piece is that, even though these abstractions and idioms can be very useful, following a pattern of using them dogmatically is not always necessary, and can sometimes even be harmful in terms of language lock-in and <a href="https://en.wikipedia.org/wiki/Law_of_triviality" target="_blank">bike-shedding</a>.
-                </p>
-                <p>
-                    Abstractions are tools. Like all tools, knowing when to use them is much more valuable than knowing how to use them. Hopefully, we can be more thoughtful about when to use ours.<br>
-                <q>
-                    Perfection is achieved, not when there is nothing more to add, but when there is nothing less to take away.
-                </q><br>
-                — Antoine de Saint-Exupéry
-                </p>
+</pre>
+            <p>
+                It can therefore be seen that <span class="inlineCode">if</span>/<span class="inlineCode">else</span> statements are inherently language agnostic, both due to their ubiquity and similar syntax in common programming languages. The use of arbritrary memory, however, is less than guaranteed, as no computer can possibly offer a program infinite memory use. As this requirement cannot be reasonably applied to any language, and is in all cases ignored when evaluating a language for Turing completeness, we will instead replace it with 'offers manipulation of memory'. What other features are shared widely enough to be language agnostic?
+            </p>
 
-                <hr>
-                <p id="disclaimer">
-                    <em>*(imperative, procedural)</em>
-                </p>
+            <h2>Variables, Primitives, and Comments</h2>
+            <p>
+                All of these languages also sport near-identical syntax for assigning variables. Most consist of just <span class="inlineCode">variableName = value</span>, with some caveats. For example, C++ and Java are statically typed, so the type of the variable has to be declared at the time that it's initialised. (example of this) Additionally, it can also be specified whether or not that variable can be modified with the const keyword, as well as further properties such as <span class="inlineCode">static</span>, <span class="inlineCode">public</span>, etc.<br>
+                On the other hand, JavaScript, Python and Ruby are all dynamically typed, meaning that types are assigned to values, <em>not</em> variables. This allows the developer to specify variables without specifying type. In JavaScript, the variable has to be declared as <span class="inlineCode">const</span> or not <span class="inlineCode">const</span>, but in Ruby and Python the only restriction is that a variable is declared before it is used. It is therefore also possible in these languages to assign a variable to a different type. This is bad practice for writing language agnostic code, as it is not valid in statically typed languages. It's also bad practice in general- a variable should be have a sensible role in program logic, and changing this role by changing the variable's type makes it more difficult to follow a variable's role and what information it holds. 
+            </p>
+            <p>
+                In terms of primitive types, not much conscious effort would need to be dedicated to making language agnostic choices. The dynamically typed languages all don't need the user to declare any types, and Java and C++ have mostly the same primitive types. The main difference between the two is that C++ has many different, specific versions of the types (such as <span class="inlineCode">long long</span>, <span class="inlineCode">char8_t</span>, <span class="inlineCode">char16_t</span>, <span class="inlineCode">short</span>, etc).
+            </p>
+            <p>
+                Comments are mostly the same in all languages. The syntax for declaring long blocks of comments can vary, but what they all have in common is that a single line of comment can be denoted by:
+            </p>
+            <pre class="codeSnippet">
+// this is a comment on one line
+            </pre>
+            <p>
+                Meaning that comments can very easily be written that require no porting at all. In any case, comments are secondary in importance to code and more detailed documentation, and will not take up much of the codebase's text (especially in a fledgling project). If moving to a different technology is a big possibility to consider in a project, then it is a good idea to thoroughly document features once they are implemented; re-implementing features is much simpler when working from a theoretical description of how it works than looking at the implementation itself, which can be confusing. Of course, it is a good idea in general to document completed features, as this makes it much easier for a new or returning developer to understand the code's purpose.
+            </p>
+            <p>
+                comments are all the same, assigning variables is mostly the same apart from the increment operator which is omitted from Ruby and Python (but trivially switched from one to the other via regex). keywords with assigning are different- ruby doesn't do consts (just warnings), C++ and Java have STATIC typing, leading to -> 
+                The latter languages are dynamically typed, and allow things like assigning a different type to a variable, which the others don't- avoid this! not language agnostic, leads to errors.
+                (also mention +=, -=, *=)
+            </p>
+
+            <h2>Operators and Maths</h2>
+            <p>
+                All of the languages discussed thus far share the majority of both arithmetical, logical, and bit-wise operators. One area where discrepancies arise, however, is with assignment operators: Ruby and JavaScript support assignments with logical operators (such as <span class="inlineCode">&&=</span> and <span class="inlineCode">||=</span>), while the others do not.<br>
+                A notable exception is that Python and Ruby do not support the increment or decrement operators- that is, it is not possible to use the <span class="inlineCode">val++</span> syntax to increment the variable <span class="inlineCode">val</span> by one. It is therefore more language agnostic to use <span class="inlineCode">val += 1</span><br>
+                It is important to note that, as a weakly typed language, JavaScript will perform many type coersions at run-time that the other languages would not. In JavaScript, <span class="inlineCode">1 / 2</span> will return <span class="inlineCode">0.5</span>, whereas the other languages would return <span class="inlineCode">0</span>; <span class="inlineCode">"11" + 1</span> will return <span class="inlineCode">"111"</span>, instead of a type error; and <span class="inlineCode">"11" - 1 </span> will return <span class="inlineCode">10</span>. Explicit type coercion is preferred for language agnostic code, both to avoid errors and to minimise the type of counterintuitive behaviour described above. This is especially true as even if an expression involving type coersion is valid in another language, it has no guarantee to have the same results.<br>
+                Additionally, C++ supports operator overloading. This means that a developer can define operators to have a new meaning for custom types, so it is, for example, possible to define a <span class="inlineCode">point</span> object responsible for managing an <span class="inlineCode">x</span> and a <span class="inlineCode">y</span> co-ordinate, and define the <span class="inlineCode">+</span> operator to mean returning a new object with the added <span class="inlineCode">x</span> and <span class="inlineCode">y</span> co-ordinate of each.
+            </p>
+
+            <!--<h2>Non-Primitive Types</h2>
+            <p>
+                
+            </p>-->
+
+            <h2>Loops and Functions</h2>
+            <p>
+                An area where language similarity returns is in the syntax of loops and defining functions. While Python and Ruby don't support the classic for loop (<span class="inlineCode">for (int i = 0; i &lt; value; i++)</span>), all of the covered languages support while loops, which are functionally equivalent to for loops. They also all, to some extent, support iterators, which add some ease of use over 'raw' loops. Some examples of how they implement these are shown below:
+            </p>
+            <pre class="codeSnippet">
+// C++
+for (std::vector&lt;int&lt;::iterator iter = vec.begin(); iter != vec.end(); iter++) {
+    std::cout &lt;&lt; *iter &lt;&lt; std::endl;
+}
+
+// Java
+Iterator&lt;int&lt; iter = list.iterator();
+while (iter.hasNext()) {
+    System.out.println(iter.next());
+}
+
+// JavaScript
+for (let elem of array) {
+    console.log(elem)
+}
+            </pre>
+            <p>
+                However, as can be seen, each language's approach to iterators can be wildly different. For easily portable code, it is better to stick with the simpler, less specfic <span class="inlineCode">while</span> loop syntax:
+            </p>
+            <pre class="codeSnippet">
+int i = 0
+while (i &lt; array.length()) {
+    System.out.println(array[i]);
+    i += 1;
+}
+            </pre>
+            <p>
+                With modifications for type, and reformatting of blocks, this code will work in all languages covered.
+            </p>
+
+            <p>
+                Functions are also very standard, with all languages using some variation on the ANSI C syntax for defining functions, shown below:
+            </p>
+            <pre class="codeSnippet">
+type foo(type x, type y) {
+
+    // some code
+
+    return value;
+}
+            </pre>
+            <p>
+                Different languages make some changes: Java requires keywords relating to class behaviours, JavaScript drops types, and Python and Ruby make some slight changes to syntax: 
+            </p>
+            <pre class="codeSnippet">
+// Python
+def foo(x, y):
+    // some code
+
+    return value
+
+// Ruby
+def foo(x, y) 
+    // some code
+
+    return value
+end
+            </pre>
+            <p>
+                Either way, there aren't many concerns here in the syntax of defining functions. There are, however issues in the <em>use</em> of functions, and what features they support in each language, which leads on to the next point.
+            </p>
+
+            <h2>Abstractions</h2>
+            <p>
+                Many abstractions in programming are about reducing the conceptual complexity of writting a program. This can allow the programmer to think more about the high-level logic of the program, without losing development time or brain power on lower-level details. They also reduce the amount of code that has to be written. For example, functions allow for the use of repeated code, and objects with inheritance allow for which code is called to be specified at runtime. 
+            </p>
+            <p>
+                This is the level at which it becomes more difficult to maintain language agnosticism, simply due to the diversity with which different languages support different types of abstractions. For example, Java is famously tied to object oriented programming, requiring all code to be placed inside of classes. All of the other languages also support OOP, but with some differences, such as C++ supporting multiple inheritance (while Java only supports implenting multiple interfaces), and JavaScript not supporting truly private instance variables.
+            </p>
+            <p>
+                Another abstraction supported to different amounts by each language is the use of higher-order functions, meaning a function that can accept other functions as parameters. This is supported natively by JavaScript and Python, with the use of pointers in C++, with some special syntax in Ruby, and not at all in Java. In the latter two, lambdas are more commonly used for this purpose. Lambdas are also supported in the other languages, but with wide differences in syntax.
+            </p>
+
+            <h2>Where Languages Diverge</h2>
+            <p>
+                There are some areas of functionality where language differences are difficult or impossible to ignore in favour of agnosticism. This is actually encountered very quickly in most projects, as the implementation of I/O operations are very different across languages. Some require import statements to do any I/O (C++/Java), C++ does I/O operations through streams; Java uses objects, some of which have to be imported; Ruby, Python and JavaScipt all simply use function calls (though nodejs requires the importing of namespaced functions).
+            </p>
+            <p>
+                In cases similar to this (UI being another example), best practice would most likely be trying to keep this code as self-contained as possible. This would mean keeping code that processes information in its own functions, and code that controls I/O and UI in its own functions. An example of this is shown below, for a hypothetical snippet from a hangman game. The example is shown in JavaScript, but would not be too difficult to port.
+            </p>
+            <pre class="codeSnippet">
+function hangman() {
+    const target = randomWord()
+    let gameOver = false
+    let guesses = []
+
+    // capture and validate player's guess
+    while (!gameOver) {
+
+        // get guess, validate it, and add it to list of guesses
+        guesses.push(getGuess(guesses))
+
+        // check if the game is over
+        gameOver = checkProgress()
+
+        // display player's progress (guesses, progress towards target word, if they've won)
+        displayProgress(target, guesses)
+    }
+}
+            </pre>
+            <p>
+                Another notable strategy for maintaining language agnositicism is to implement any user-facing features last. Because of the high language specificity of these utilities, leaving this work to the last step means that the majority of the work is easy to port. Starting with front-end code means that if the project has to be ported, basically all of the work done so far is lost.
+            </p>
             </div>
         </div>
     </body>
 </html>
+<!--
+Right. It goes:
+syntax
+output
+comments
+variables
+data types
+operators
+maths
+conditionals
+loops
+functions -->
