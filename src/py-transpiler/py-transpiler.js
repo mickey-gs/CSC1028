@@ -1,5 +1,6 @@
 import { TranspilerSuper } from "../transpiler-super/transpiler-super.js"
 import * as fs from "fs"
+import { match } from "assert";
 
 export class PyTranspiler extends TranspilerSuper {
   corrections;
@@ -14,6 +15,9 @@ export class PyTranspiler extends TranspilerSuper {
       "&&": "and",
       "||": "or",
       "Math": "math",
+      "!==": "!=",
+      ".push(": ".append(",
+      "prompt": "input",
       "imports": [
         "math",
         "numpy"
@@ -22,18 +26,18 @@ export class PyTranspiler extends TranspilerSuper {
   }
 
   parse(node) {
-    return this.recursiveParse(node)
+    const code = this.recursiveParse(node)
+    return this.correct(code)
   }
 
   recursiveParse(node) {
     this[node.type](node);
-    let code = this.buffer.get();
-    return this.correct(code);
+    return this.buffer.get();
   }
 
   correct(code) {
     for (let key of Object.keys(this.corrections)) {
-      this.buffer.replace(key, this.corrections[key]);
+      code = code.replaceAll(key, this.corrections[key]);
     }
 
     for (const module of this.corrections.imports) {
@@ -60,6 +64,37 @@ export class PyTranspiler extends TranspilerSuper {
       }
 
       return 'print(' + args.join(' + ') + ')\n'
+    })
+
+    code = code.replace(/([^\w])!(?!=)(.+\s)/gmi, (match, preceding, operand) => {
+      return preceding + ' not ' + operand
+    })
+
+    let isRegex = false
+    let reg = ""
+    code = code.replace(/(\w+)\.match\(\/(.+)\/(\w+)\)/gmi, (match, arg, regex, tags) => {
+      isRegex = true
+      reg = regex
+      return 'regex.match(' + arg + ')'
+    })
+    if (isRegex) {
+      code = 'import re\n\nregex = re.compile("' + reg + '")\n' + code
+    }
+
+    code = code.replace(/(\w+).split\(""\)/gmi, (match, arg) => {
+      return 'list(' + arg + ')'
+    })
+
+    code = code.replace(/(\w+).join\((.+)\)/gmi, (match, arg, joiner) => {
+      return joiner + '.join(' + arg + ')'
+    })
+
+    code = code.replace(/(\w+).includes\((.+)\)/gmi, (match, callee, arg) => {
+      return arg + ' in ' + callee
+    })
+
+    code = code.replace(/^.*@DELETE@.*$/gmi, (match) => {
+      return ''
     })
 
     return code
@@ -122,5 +157,23 @@ export class PyTranspiler extends TranspilerSuper {
     if (!node.prefix) {
       this.buffer.add(node.operator)
     }
+  }
+
+  DoWhileStatement(node) {
+    this.buffer.add('while True')
+    this.recursiveParse(node.body)
+    this.buffer.trim()
+    this.buffer.indent()
+    this.buffer.newline()
+    this.buffer.add('if not (')
+    this.recursiveParse(node.test)
+    this.buffer.add('):')
+    this.buffer.indent()
+    this.buffer.newline()
+    this.buffer.add('break')
+    this.buffer.dedent()
+    this.buffer.dedent()
+    this.buffer.newline()
+    this.buffer.newline()
   }
 }

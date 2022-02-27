@@ -8,7 +8,9 @@ export class RubyTranspiler extends TranspilerSuper {
     super();
     this.corrections = {
       "else if": "elsif",
-      "console.log": "puts"
+      "console.log": "puts",
+      "!==": "!=",
+      "includes": "include?"
     }
   }
 
@@ -17,11 +19,6 @@ export class RubyTranspiler extends TranspilerSuper {
     return this.correct(code)
   }
 
-  recursiveParse(node) {
-    this[node.type](node);
-    return this.buffer.get()
-  }
-  
   correct(code) {
     for (const key of Object.keys(this.corrections)) {
       code = code.replace(new RegExp(key, 'gmi'), this.corrections[key]);
@@ -81,6 +78,14 @@ export class RubyTranspiler extends TranspilerSuper {
       }
 
       return 'puts(' + args.join(' + ') + ')\n'
+    })
+
+    code = code.replace(/(\w+) = prompt\((.+)\)/gmi, (match, variable, param) => {
+      return 'puts ' + param + '\n' + variable + ' = gets.chomp'
+    })
+
+    code = code.replace(/^.*@DELETE@.*$/gmi, (match) => {
+      return ''
     })
 
     return code
@@ -155,5 +160,16 @@ export class RubyTranspiler extends TranspilerSuper {
     if (!node.prefix) {
       this.buffer.add(node.operator)
     }
+  }
+
+  DoWhileStatement(node) {
+    this.buffer.add('loop do')
+    this.recursiveParse(node.body)
+    this.buffer.deleteLines(1)
+    this.buffer.add(' break unless (')
+    this.recursiveParse(node.test)
+    this.buffer.add(') ').newline()
+    this.buffer.add('end')
+    this.buffer.newline()
   }
 }
