@@ -7,7 +7,6 @@
   "directories": {
     "test": "tests"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "test"
   },
@@ -20,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/mickey-gs/CSC1028/issues"
   },
-  "homepage": "https://github.com/mickey-gs/CSC1028#readme"
+  "homepage": "https://github.com/mickey-gs/CSC1028#readme",
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  }
 }
