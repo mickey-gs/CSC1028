@@ -4,14 +4,14 @@ import { RubyTranspiler } from "./src/ruby-transpiler/ruby-transpiler.js";
 import * as acorn from "acorn";
 
 export function toRuby(code) {
-  let ast = acorn.parse(code)
+  let ast = acorn.parse(code, {ecmaVersion: 'latest'})
   const transpiler = new RubyTranspiler
 
   return transpiler.parse(ast)
 }
 
 export function toPython(code) {
-  let ast = acorn.parse(code)
+  let ast = acorn.parse(code, {ecmaVersion: 'latest'})
   const transpiler = new PyTranspiler
 
   return transpiler.parse(ast)

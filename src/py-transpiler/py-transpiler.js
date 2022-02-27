@@ -6,7 +6,19 @@ export class PyTranspiler extends TranspilerSuper {
   
   constructor() {
     super();
-    this.corrections = JSON.parse(fs.readFileSync("./src/py-transpiler/python.json"));
+    this.corrections = {
+      "true": "True",
+      "false": "False",
+      "else if": "elif",
+      "console.log": "print",
+      "&&": "and",
+      "||": "or",
+      "Math": "math",
+      "imports": [
+        "math",
+        "numpy"
+      ] 
+    };
   }
 
   parse(node) {

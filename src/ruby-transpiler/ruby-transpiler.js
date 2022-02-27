@@ -6,7 +6,10 @@ export class RubyTranspiler extends TranspilerSuper {
 
   constructor() {
     super();
-    this.corrections = JSON.parse(fs.readFileSync("./src/ruby-transpiler/ruby.json"));
+    this.corrections = {
+      "else if": "elsif",
+      "console.log": "puts"
+    }
   }
 
   parse(node) {
