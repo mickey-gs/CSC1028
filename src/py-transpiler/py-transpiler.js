@@ -97,6 +97,20 @@ export class PyTranspiler extends TranspilerSuper {
       return ''
     })
 
+    code = code.replace(/^.+PromptSync\(\).+$/gmi, '')
+
+    code = code.replace(/fs\.writeFileSync\((.+),\s(.+)\)/gmi, (match, file, content) => {
+      return "open(" + file + ", 'w').write(" + content + ")"
+    })
+
+    code = code.replace(/fs\.appendFileSync\((.+),\s(.+)\)/gmi, (match, file, content) => {
+      return "open(" + file + ", 'a').write(" + content + ")"
+    })
+
+    code = code.replace(/fs\.readFileSync\((.+)\)\.toString\(\)/gmi, (match, file, content) => {
+      return "open(" + file + ", 'r').read()"
+    })
+
     return code
   }
 

@@ -31,7 +31,7 @@ export class TranspilerSuper {
   }
 
   ImportDeclaration(node) {
-    this.buffer.add('@DELETE@')
+    this.buffer.add('@DELETE@\n')
   }
 
   FunctionDeclaration(node) {
