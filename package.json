@@ -2,7 +2,7 @@
   "type": "module",
   "name": "@mickey-gs/semantic",
   "description": "Hi! This is semantic, a project intended to allow developers to generate source code in a variety of different programming languages with ease. This README is intended to serve as a brief introduction to the project, but a more in-depth explanation is provided [here]()",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "index.js",
   "directories": {
     "test": "tests"
