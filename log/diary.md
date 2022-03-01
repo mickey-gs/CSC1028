@@ -82,15 +82,12 @@ I saw my mark for deliverable 1 a short while before joining the meeting. I'm di
 
 ### Sunday, 13th February 2022
 Because I'll end up having to largely rewrite deliverable 1 (both to build on it for deliverable 2 and because I'm not happy with the standard of it, if my work is going to be public), I researched what other people had already contributed to the topic of writing portable code. Most resources seem to be focused on code portable between different platforms:
-- https://medium.com/trueface-ai/how-to-design-a-language-agnostic-cross-platform-computer-vision-sdk-e437ecac8b4e (about writing an SDK that works across different architectures)
-- https://pontus.digipen.edu/~mmead/www/docs/WritingPortableCode.pdf (extremely in-depth look at writing code across platforms and compilers. Particular to C, C++, and game development, with a look at Java at the end)
+- [this one](https://medium.com/trueface-ai/how-to-design-a-language-agnostic-cross-platform-computer-vision-sdk-e437ecac8b4e) about writing an SDK that works across different architectures)
+- [this one](https://pontus.digipen.edu/~mmead/www/docs/WritingPortableCode.pdf) is an extremely in-depth look at writing code across platforms and compilers. Particular to C, C++, and game development, with a look at Java at the end)
 
 These articles aren't about exactly the same topic as what I'm writing about, but there is still some valuable information in both. The Medium article is a great look at how to package software libraries, which will come in handy later in the project, and both give advice on how to separate platform-specific code from the general program logic, which is demonstrative on how I should be structuring my own program to generate code.
 
-The best resource by far that I found on language agnosticism is this one:
-https://github.com/mankenavenkatesh/Language-Agnosticism
-
-A Github repo that aggregates other resources, and is designed to teach language agnosticism. I'll likely be basing my deliverable on some of the content from there, and trying to condense it into a more approachable article than a full course of content.
+The best resource by far that I found on language agnosticism is this [Github repo](https://github.com/mankenavenkatesh/Language-Agnosticism) that aggregates other resources, and is designed to teach language agnosticism. I'll likely be basing my deliverable on some of the content from there, and trying to condense it into a more approachable article than a full course of content.
 
 I'll spend up until the meeting this week planning what I want to write my deliverable to say, and then do the actual rewriting the next week, at the same time as starting to look at the next deliverable.
 
@@ -170,4 +167,4 @@ Just finished the first draft of deliverable 2. Feeling a lot more confident now
 
 I showed my draft to my dad. I thought that his background in programming would make him a good representative of the guide's target audience, as he has enough experience to use and expand upon the project after reading its documentation. He thought that the guide did a good job at explaining the project's motivation and goals, as well as what problem it was trying to solve, and that it gave a good overview of how the code actually works. He had some problems, however, with some sections reading like I didn't implement something because I didn't want to, and some confusing wording in other sections. I quickly fixed these, and put some finishing touches to each deliverable, so that there's more cohesion between the two.
 
-A concerning thing I noticed while doing some testing (do later: mention vulnerabilities and fix those links nearer the top)
+I was testing out my npm package by installing it in a test directory. I noticed something concerning, however: npm highlights several 'moderate vulnerabilities' in Semantic. These all seem to be due to a vulnerability existing in prompt-sync, so I'll probably just uninstall it in the Semantic repository and direct users to install it themselves, as it is the only method command line input supported at this time.
