@@ -88,7 +88,7 @@ export class RubyTranspiler extends TranspilerSuper {
       return ''
     })
 
-    code = code.replace(/^.+PromptSync\(\).+$/gmi, '')
+    code = code.replace(/^.+PromptSync.*$/gmi, '')
 
     code = code.replace(/fs\.writeFileSync\((.+),\s(.+)\)/gmi, (match, file, content) => {
       return "File.open(" + file + ", 'w') { |file| file.print(" + content + ") }"
