@@ -72,6 +72,7 @@ function displayProgress(target, guesses) {
 }
 
 function getRandomWord() {
+  // word chosen randomly by me. This placeholder is used as it is not in the test's scope to choose between a list of genuine random words
   return 'burger'
 }
 
