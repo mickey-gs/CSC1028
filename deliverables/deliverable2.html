@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Semantic</title>
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+            * {
+                font-family: 'Rubik Mono One', sans-serif;
+            }
+
+            body {
+                padding: 0;
+                margin: 0;
+            }
+
+            h1 {
+                font-size: 5em;
+                line-height: 1em;
+                margin-right: 1.5em;
+            }
+
+            h2 {
+                font-size: 3em;
+            }
+
+            h3 {
+                font-size: 2em;
+            }
+
+            p {
+                font-size: 1.4em;
+            }
+
+            li {
+                font-size: 1.4em;
+            }
+
+            #wrapper {
+                display: grid;
+                grid-template-columns: 1fr 5fr;
+                width: auto;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            #sidebar {
+                background-color: rgb(201, 201, 201);
+                border-right: 2px dashed;
+                border-right-color: rgb(145, 145, 145);
+            }
+
+            #main {
+                padding: 2.5%;
+            }
+
+            a:visited {
+                color: blue;
+            }
+
+            ul a:visited {
+                color: black;
+            }
+
+            ul a:link {
+                color: black;
+            }
+
+            .codeSnippet {
+                font-family: monospace;
+                font-size: 1.5em;
+                background-color: lightgray;
+                width: auto;
+                min-width: 100%;
+                line-height: 1em;
+                padding: 3px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            .inlineCode {
+                background-color: lightgray;
+                font-family: monospace;
+            }
+
+            #exampleBox {
+                display: flex;
+                flex-direction: column;
+                width: 90%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="wrapper">
+            <div id="sidebar">
+                
+            </div>
+            <div id="main">
+            <h1>
+                Semantic
+            </h1>
+
+            <h2>Introduction: What is Semantic?</h2>
+            <p>
+                Semantic is a project designed to allow developers to rapidly prototype and develop source code in a range of different programming languages by automatically converting source code in one language into another. Right now, Semantic is still in its infancy; it allows for the conversion of basic JavaScript into Python and Ruby. Semantic is open-source, and the source code is available <a href="https://www.github.com/mickey-gs/semantic" target="_blank">on Github</a>.
+            </p>
+
+            <h2>Motivation</h2>
+            <p>
+                In linguistics, the 'semantics' of a language refers to the meanings of that language's individual words. The 'syntax' of a language is its structure: how words and symbols have to be ordered to construct a valid sentence. It is from the first term, 'semantic', that this project's name is derived. Semantic aims to separate the syntax of a specific programming language from its semantics, and extract the function of code in order to easily port it between languages. 
+            </p>
+            <p>
+                I have previously written about <a href="deliverable1.html" target="_blank">how to write language-agnostic code</a>. I see writing idiomatic code to be a potential roadblock of progress, particularly by its tendency to amplify technical debt, restricting a developer to the language they chose at the start of development. Writing language-agnostic code is important for maximising the portability of code and the freedom of the developer who writes it. This package also intends to work toward this by making code conversion a simpler, more automated process.
+            </p>
+            <p>
+                This has many potential benefits to developers, such as: reducing technical debt by making it easier to switch language during the production of software; making code easier to port between different platforms; helping developers to not worry about what language they choose to use at the start of a project; and many more.
+            </p>
+                
+            <h2>Getting Started</h2>
+            <p>
+                Using semantic is really straightforward. In order to use semantic in a project, install it like any other npm package while in your project directory: 
+            </p>
+            <pre class="codeSnippet">
+npm install @mickey-gs/semantic</pre>
+            <p>
+                To use the project's features, import them from the package like so:
+            </p>
+            <pre class="codeSnippet">
+import { toRuby, toPython } from "@mickey-gs/semantic"
+
+const jsCode = fs.readFileSync("script.js")
+const rubyCode = toRuby(jsCode)
+const pythonCode = toPython(jsCode)</pre>
+
+
+            <h2>Running Tests</h2>
+            <p> 
+                Semantic uses a list of example JavaScript files for its tests, which should be installed by cloning the Github repository. This can be achieved by running
+            </p> 
+            <pre class="codeSnippet">git clone https://github.com/mickey-gs/semantic.git</pre> 
+            <p>
+                Once these are installed in your project's directory, Semantic's test cases can be ran with 
+            </p>
+            <pre class="codeSnippet">npm test</pre>
+            <p>
+                A list of features will be displayed, each of which has been implemented in Semantic. When one is chosen, a script written in JS and making use of this language feature will be displayed, first in its original form and then after being converted to Ruby and Python by Semantic. 
+            </p>
+        
+            <h2>Features</h2>
+            <p>
+                While this project does not support the full feature set of Node.js at this time, it supports enough features to build some basic but fully functional applications. As of the time of writing, the project supports:
+            </p>
+            <ul>
+                <li>Command Line I/O</li>
+                <li>File I/O</li>
+                <li>Functions, including higher order functions (functions that take other functions as arguments)</li>
+                <li>Loops (for, while and do while)</li>
+                <li>Arithmetic, operators and variables (including arrays)</li>
+            </ul>
+            <p>
+                Development has so far been based on the outline of my guide to building language-agnostic code. This means that I have written the code for this project mostly in the order I discuss language features in the guide, starting with the basics of a programming language, and working up in complexity. The latest features are the command line I/O and file I/O systems. The goal of this project is not to fulfill the full specification of JavaScipt in other languages, with lots of language-specific features and abstractions, but to implement enough for useful, maintainable code to be ported easily. The focus will then shift to expanding the scope of the project, incorporating other languages and technologies. 
+            </p>
+            <p>
+                There are several reasons for avoiding implementing all of JavaScript's full feature set. These include saving development time for more immediately useful features, discouraging the type of language specificity this project is trying to aid in reducing, and that other languages may not even implement said features.
+            </p>
+            
+            <h2>Example</h2>
+            <p>
+                Below, an example of Semantic's functionality is shown, where a user runs the test script and chooses to see the "higher order functions" test case. 
+            </p>
+            <div id="examplesBox">
+                <img src="images/npm-test-1.png" style="width: 50%;">
+                <img src="images/npm-test-2.png" style="width: 50%;">
+                <img src="images/npm-test-3.png" style="width: 50%;">
+                <img src="images/npm-test-4.png" style="width: 50%;">
+            </div>
+
+            <h2>References</h2>
+            <p>
+                This project is made possible by <a href="https://github.com/acornjs/acorn" target="_blank">acorn.js</a>, a project that allows for the conversion of JavaScript code into an abstract syntax tree (AST). An abstract syntax tree is a representation of a given program that is not associated with any specific programming language, consisting of a tree structure of nodes. Each node describes some stage of the program's execution, and may have its own children nodes. This structure is very well suited to describing program execution, as it can easily describe the functionality of recursive elements, such as nested loops and conditional statements. Below, an example AST (sourced from this Wikipedia article) can be seen for Euclid's algorithm, which is used to calculate the greatest common divisor of two integers.
+            </p> 
+            <img src="images/ast.png" alt="An image depicting an abstract syntax tree." style="width: 40%;">
+            <p>
+                ASTs make up a key part of the project's internal workflow, as incoming JS code is first converted into AST form by acorn, and then to the target programming language by my own code.
+            </p>
+            
+            <h2>Contributing to Development</h2>
+            <p>
+                There are several key resources a developer should be familiar with to contribute to this project. One is the <a href="https://web.archive.org/web/20210314002546/https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API" target="_blank">ESTree specification for ASTs</a>, as this is the format that the initial JS code is converted in to. Personally, the easiest way I found to learn more about the spec was to write an example program, have acorn parse it, and then traverse the tree produced, printing each node's properties to the console. Another important source will be the <a href="https://nodejs.org/en/docs/" target="_blank"></a>official NodeJS documentation, especially what features of the <a href="https://nodejs.org/en/docs/es6/" target="_blank">JS ECMA specification it supports</a>, in order to understand the functionality and specification of the input code and accurately convert it into the output. Additionally, the documentation of the target language will be a key resource. So far, this has meant consulting the brilliant <a href="https://ruby-doc.org/" target="_blank">Ruby</a> and <a href="https://docs.python.org/3/" target="_blank">Python</a> docs, which are great as references for understanding the target language, and duplicating the input code's functionality in the output.    
+            </p>
+            <p>
+                Below, I will explain my own code, as guidance for any interested developers that would like to contribute.
+            </p>
+
+            <h3>Interface</h3>
+            <p>
+                Due to the fact that, at the time of writing, only two languages are supported for conversion, and each to only one standard, the only functionality important to the end user is converting code from one language to another. For this reason, the only interface between the user and this library is a function for each language that takes JS code as its input, and outputs code in the target language. At this time, this means that the two functions importable from the library are <span class="inlineCode">toRuby(code)</span> and <span class="inlineCode">toPython(code)</span>. Any code contributed for another language should follow this convention.
+            </p>
+
+            <h3>Overview</h3>
+            <p>
+                Shown below is how the conversion process works for the function <span class="inlineCode">toPython(code)</span>, as snippets from this project's main file (<span class="inlineCode">index.js</span>)
+            </p>
+            <pre class="codeSnippet">
+import { PyTranspiler } from "./src/py-transpiler/py-transpiler.js";
+import * as acorn from "acorn";
+
+export function toPython(code) {
+    let ast = acorn.parse(code, {ecmaVersion: 'latest', sourceType: 'module'})
+    const transpiler = new PyTranspiler
+    
+    return transpiler.parse(ast)
+}</pre>
+            <p>
+                The code for the Python transpiler and acorn parser are imported. The function exported takes JS code as its argument, uses acorn to parse it and create the AST, and returns the transpiler's conversion of the AST to Python. The <span class="inlineCode">parse(code)</span> method, used as an interface with the library, has the following structure:
+            </p>
+            <pre class="codeSnippet">
+parse(node) {
+    const code = this.recursiveParse(node)
+    return this.correct(code)
+}
+            </pre>
+            <p>
+                The method <span class="inlineCode">recursiveParse(node)</span> will recursively call itself throughout the transpilation process, parsing AST nodes as needed. The <span class="inlineCode">correct(code)</span> method makes some language-specific substitutions, such as replacing <span class="inlineCode">console.log(value)</span> with <span class="inlineCode">print(value)</span>.
+            </p>
+
+            <h3>Converting to AST</h3>
+            <p>
+                This is the first stage of the libraries internal workflow. The acorn.js package is used to convert the code to an AST object, following the ESTree standard mentioned above. To become familiar with the AST's structure, I found it most useful to recursively examine the node's properties, and the properties of its children.
+            </p>
+
+            <h3>The Transpiler</h3>
+            <p>
+                For each supported language, there is a corresponding transpiler class, designed to take the AST input and convert it to valid output code. Each class inherits a super class named (creatively) <span class="inlineCode">transpiler-super</span>. The transpiler works by recursively examining each node in the AST, examining it, and outputting suitable code in its target language. As an example, I will explain how the Ruby transpiler converts a structure of if/else statements. For context, here is a parent <span class="inlineCode">Node</span> object representing a program that consists of an if/else statement. Note the <span class="inlineCode">Node</span> of type <span class="inlineCode">IfStatement</span>:
+            </p>
+            <img src="images/ifStatementNode.png" alt="An image of JSON representation of an AST node. ">
+            <p>
+                The transpiler starts by parsing the node's <span class="inlineCode">test</span> property- the condition that has to evaluate to <span class="inlineCode">true</span> for the <span class="inlineCode">if</span> statement's code to execute. The node's <span class="inlineCode">consequent</span> property is then parsed. This is the code that gets executed if the condition evaluates to <span class="inlineCode">true</span>. If the consequent consists of only one statement, it is converted to a <span class="inlineCode">BlockStatement</span> node. This type of node is meant to hold more than one statement (hence being a block), but it's much easier to just create a block of one statement than write lots of additional code for this edge case. If the <span class="inlineCode">if</span> statement has an <span class="inlineCode">alternate</span> property (an <span class="inlineCode">else</span> statement), that is parsed as well. Because of a quirk in Ruby's design, this method may call <span class="inlineCode">this.buffer.deleteLines(1)</span>. This is because Ruby ends <em>most</em> of its blocks with the keyword <span class="inlineCode">end</span>, but in the case of an <span class="inlineCode">if</span> statement followed by an <span class="inlineCode">else</span> statement, the <span class="inlineCode">if</span> statement's <span class="inlineCode">end</span> must be omitted. The transpiler therefore deletes the erroneous <span class="inlineCode">end</span> keyword that would be added to the buffer before the <span class="inlineCode">else</span> statement is parsed.
+            </p>
+<pre class="codeSnippet">
+IfStatement(node) {
+    this.buffer.add("if ");
+    this.recursiveParse(node.test);
+    
+    if (node.consequent.type != 'BlockStatement') {
+        let tempNode = {type: 'ReturnStatement'}
+        Object.assign(tempNode, node.consequent)
+        node.consequent.type = 'BlockStatement'
+        node.consequent.body = [tempNode]
+        this.recursiveParse(node.consequent)
+    }
+    else {
+        this.recursiveParse(node.consequent);
+    }
+    
+    if (node.alternate) {
+        // get rid of unnecessary 'end' in line above
+        this.buffer.deleteLines(1);
+        this.buffer.add("else ");
+        this.recursiveParse(node.alternate);
+    }
+}</pre>
+            <p>
+                The transpiler's design is made simpler by having one method for every type of AST node, and giving it the same name as that type. This allows a central method, <span class="inlineCode">recursiveParse(node)</span> to automatically call the correct method for that mode by invoking <span class="inlineCode">this[node.type](node)</span>. In JavaScript, this means calling a method named <span class="inlineCode">node.type</span> with the argument <span class="inlineCode">node</span> (the <span class="inlineCode">node</span> argument to be translated into code). The <span class="inlineCode">recursiveParse(node)</span> method returns the buffer's contents, obtained with the buffer's <span class="inlineCode">get()</span> method. 
+            </p>
+<pre class="codeSnippet">
+recursiveParse(node) {
+    this[node.type](node);
+    return this.buffer.get();
+}</pre>
+            <p>
+                These methods for each type of node are added as development continues. The ones that exist now are by no means exhaustive, and do not cover the full scope of the ESTree spec.
+            </p>
+
+            <h3>The Buffer Class</h3>
+            <p>
+                The first approach I took at outputting the translated code was by adding it to a <span class="inlineCode">string</span> that was an instance variable of the transpiler class. This string acted as a buffer, which was added to repeatedly before being outputted at the code's completion. This approach worked at first, but with the need to automatically indent and dedent blocks of code, I decided to create a more advanced <span class="inlineCode">Buffer</span> class. This class holds a <span class="inlineCode">string</span> representing the output code, and supports methods designed to make creating formatted output easier, such as <span class="inlineCode">indent()</span>, <span class="inlineCode">dedent()</span>, <span class="inlineCode">trim()</span> (which removes all trailing whitespace from the buffer), <span class="inlineCode">newline()</span> and <span class="inlineCode">deleteLines(int)</span> (which removes <span class="inlineCode">int</span> lines from the end of the buffer). The <span class="inlineCode">indent()</span> and <span class="inlineCode">dedent()</span> methods control how much white space is added after a new line is taken and before any more code is added.
+            </p>
+
+            <h3>Corrections with Regex</h3>
+            <p>
+                The final step before the code is outputted is making corrections with regular expressions (regex), which are given a great summary explanation at <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">MDN</a> and a more in-depth view <a href="https://www.regular-expressions.info/tutorial.html" target="_blank">here</a>. Some of these are simply replacing JS-specific keywords with keywords in the output language. For example, the Python transpiler subsitutes all appearances of the <span class="inlineCode">&&</span> operator with <span class="inlineCode">and</span>. These simple, find-and-replace corrections are stored in the class's <span class="inlineCode">corrections</span> instance variable. The <span class="inlineCode">correct</span> method then makes some more complicated replacements using JavaScript's massively useful <span class="inlineCode">replace(string | regex, string | function)</span> method, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace" target="_blank">explained very well by MDN</a>. Each of these replacement functions is explained by the comment preceding it, but for the sake of helpfulness one is explained below:
+            </p>
+<pre class="codeSnippet">
+code = code.replace(/fs\.writeFileSync\((.+),\s(.+)\)/gmi, (match, file, content) => {
+    return "File.open(" + file + ", 'w') { |file| file.print(" + content + ") }"
+})</pre>
+            <p>
+                This code, from the Ruby transpiler, finds all occurences of calls to <span class="inlineCode">fs.writeFileSync(file, content)</span>. It replaces all of these calls with the Ruby equivalent, which is to call the <span class="inlineCode">File.open(file, 'w')</span> method, and pass it a block (the strange-looking code in braces), which prints the contents to the file. A block is similar to an anonymous function- it allows for parameters to be passed to it and carries out a sequence of operations on them. In this case, that means printing the <span class="inlineCode">contents</span> variable to the desired file, which is passed in to the block. 
+            </p>
+
+            <h3>The Code</h3>
+            <p>
+                The full source code can be found at <a href="https://github.com/mickey-gs/semantic/tree/main/src" target="_blank">this project's Github repository</a>. Each transpiler has its own folder within the larger <span class="inlineCode">src</span> folder.
+            </p>
+            </div>
+        </div>
+    </body>
+</html>
+<!--Talk about how this builds on d1
+say where i get outside code from
+explain flow of Development
+provide links to the references ive used
+add thing saying that i have obtained acorn under MIT license to github-->

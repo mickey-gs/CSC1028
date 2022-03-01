@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Deliverable 1</title>
+        <title>How to Write Language Agnostic Code</title>
 
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
@@ -104,13 +104,13 @@
 
                 <h2>Introduction</h2>
                 <p>
-                    This guide is intended to teach developers how to write code that is easily portable among a subset of modern, widely-used programming languages. This is a vital skill to have in the early stages of working on a project, as writing language-agnostic code reduces technical debt. The developer is then granted much more freedom and versatility in what language they continue their development in, as it does not take as much work to port generic code as it does idiomatic code.<br>
+                    This guide is intended to teach developers how to write code that is easily portable among a set of modern, widely-used programming languages. This is a vital skill to have in the early stages of working on a project, as writing language-agnostic code reduces technical debt: the developer is granted more versatility in what language they continue their development in, as it does not take as much work to port generic code as it does to port idiomatic code.<br>
                     This guide starts with the basics of several languages in wide use (namely, C++, Java, JavaScript, Python, and Ruby, which I have enough experience in to discuss), and begins by outlining the features that make them Turing complete. The guide will then expand on the features that they share, and their more advanced features, which may differ greatly.
                 </p>
 
                 <h2>Turing Completeness</h2>
                 <p>
-                    For a programming language to be Turing complete, it must allow for conditional branching and the use of arbritrary amounts of memory. Almost all languages allow for conditional branching in at least the form of if/else statements, which are implemented in a fairly standard way. MENTION GOTO<br>
+                    For a programming language to be Turing complete, it must allow for conditional branching and the manipulation of arbritrary amounts of memory. The simplest form of conditional branching is assembly's conditional <span class="inlineCode">goto</span> statements. The equivalent of this in modern languages is <span class="inlineCode">if</span>/<span class="inlineCode">else</span> statements and function calls. Combined, these allow for conditional execution and recursion, which are required for Turing completeness. Conditional statements are implemented in a fairly standard way.<br>
                     C++, Java and JavaSript all have identical syntax for this:
                 </p>
                 <pre class="codeSnippet">
@@ -150,7 +150,7 @@ else:
 
 </pre>
             <p>
-                It can therefore be seen that <span class="inlineCode">if</span>/<span class="inlineCode">else</span> statements are inherently language agnostic, both due to their ubiquity and similar syntax in common programming languages. The use of arbritrary memory, however, is less than guaranteed, as no computer can possibly offer a program infinite memory use. As this requirement cannot be reasonably applied to any language, and is in all cases ignored when evaluating a language for Turing completeness, we will instead replace it with 'offers manipulation of memory'. What other features are shared widely enough to be language agnostic?
+                It can therefore be seen that <span class="inlineCode">if</span>/<span class="inlineCode">else</span> statements are inherently language agnostic, both due to their ubiquity and similar syntax in common programming languages. The use of arbritrary memory, however, is less than guaranteed, as no computer can possibly offer a program infinite memory use. As this requirement cannot be reasonably applied to any language, it can instead by replaced by 'offers manipulation of memory'- which all languages offer, even if memory manipulation is indirect. What other features are shared widely enough to be language agnostic?
             </p>
 
             <h2>Variables, Primitives, and Comments</h2>
@@ -168,12 +168,7 @@ else:
 // this is a comment on one line
             </pre>
             <p>
-                Meaning that comments can very easily be written that require no porting at all. In any case, comments are secondary in importance to code and more detailed documentation, and will not take up much of the codebase's text (especially in a fledgling project). If moving to a different technology is a big possibility to consider in a project, then it is a good idea to thoroughly document features once they are implemented; re-implementing features is much simpler when working from a theoretical description of how it works than looking at the implementation itself, which can be confusing. Of course, it is a good idea in general to document completed features, as this makes it much easier for a new or returning developer to understand the code's purpose.
-            </p>
-            <p>
-                comments are all the same, assigning variables is mostly the same apart from the increment operator which is omitted from Ruby and Python (but trivially switched from one to the other via regex). keywords with assigning are different- ruby doesn't do consts (just warnings), C++ and Java have STATIC typing, leading to -> 
-                The latter languages are dynamically typed, and allow things like assigning a different type to a variable, which the others don't- avoid this! not language agnostic, leads to errors.
-                (also mention +=, -=, *=)
+                meaning that comments can very easily be written that require no porting at all. In any case, comments are secondary in importance to code and more detailed documentation, and will not take up much of the codebase's text (especially in a fledgling project). If moving to a different technology is a big possibility to consider in a project, then it is a good idea to thoroughly document features once they are implemented; re-implementing features is much simpler when working from a theoretical description of how it works than looking at the implementation itself, which can be confusing. Of course, it is a good idea in general to document completed features, as this makes it much easier for a new or returning developer to understand the code's purpose.
             </p>
 
             <h2>Operators and Maths</h2>
@@ -184,14 +179,14 @@ else:
                 Additionally, C++ supports operator overloading. This means that a developer can define operators to have a new meaning for custom types, so it is, for example, possible to define a <span class="inlineCode">point</span> object responsible for managing an <span class="inlineCode">x</span> and a <span class="inlineCode">y</span> co-ordinate, and define the <span class="inlineCode">+</span> operator to mean returning a new object with the added <span class="inlineCode">x</span> and <span class="inlineCode">y</span> co-ordinate of each.
             </p>
 
-            <!--<h2>Non-Primitive Types</h2>
+            <h2>Non-Primitive Types</h2>
             <p>
-                
-            </p>-->
+                Two non-primitive types common to all of these languages are the dynamic array (a sequence of elements of the same type, with a length that can increase or decrease) and the map (a data structure associating a set of elements of one type with a set of elements of a second type).
+            </p>
 
             <h2>Loops and Functions</h2>
             <p>
-                An area where language similarity returns is in the syntax of loops and defining functions. While Python and Ruby don't support the classic for loop (<span class="inlineCode">for (int i = 0; i &lt; value; i++)</span>), all of the covered languages support while loops, which are functionally equivalent to for loops. They also all, to some extent, support iterators, which add some ease of use over 'raw' loops. Some examples of how they implement these are shown below:
+                An area where language similarity returns is in the syntax of loops and defining functions. While Python and Ruby don't support the classic <span class="inlineCode">for</span> loop (<span class="inlineCode">for (int i = 0; i &lt; value; i++)</span>), all of the covered languages support while loops, which are functionally equivalent to for loops. They also all, to some extent, support iterators, which add some ease of use over 'raw' loops. Some examples of how they implement these are shown below:
             </p>
             <pre class="codeSnippet">
 // C++
@@ -301,15 +296,3 @@ function hangman() {
         </div>
     </body>
 </html>
-<!--
-Right. It goes:
-syntax
-output
-comments
-variables
-data types
-operators
-maths
-conditionals
-loops
-functions -->
