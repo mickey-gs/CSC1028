@@ -24,9 +24,11 @@ export class RubyTranspiler extends TranspilerSuper {
       code = code.replace(new RegExp(key, 'gmi'), this.corrections[key]);
     }
 
+    // replace JS floor function for rounding decimals
     let regex = /Math.floor\((.+)\)/gm
     code = code.replace(regex, '($1).floor');
 
+    // recognise all functions that take functions as parameters, storing which parameter is a function
     let higherOrderFuncs = {}
     code = code.replace(/def (\w+)\(.+\)\n(.+\n)+/gmi, (def, $1) => {
         let funcDeclaration = def.matchAll(/def \w+\((.+)\)/gmi)
@@ -46,6 +48,7 @@ export class RubyTranspiler extends TranspilerSuper {
         return def
     })
 
+    // for all calls of higher order functions, wrap any parameter functions in the correct syntax
     for (const func of Object.keys(higherOrderFuncs)) {
       function replacer(param) {
         if (typeof(replacer.i) == 'undefined') {
@@ -65,9 +68,11 @@ export class RubyTranspiler extends TranspilerSuper {
       })
     }
 
+    // Ruby does not have an increment operator
     regex = /(\w+)\+\+/gmi
     code = code.replace(regex, '$1 += 1')
 
+    // replace calls to console.log
     code = code.replace(/puts\((.+)\)\n/gmi, (input, $1) => {
       let args = $1.split(' + ')
 
@@ -80,15 +85,20 @@ export class RubyTranspiler extends TranspilerSuper {
       return 'puts(' + args.join(' + ') + ')\n'
     })
 
+    // replace calls to prompt
     code = code.replace(/(\w+) = prompt\((.+)\)/gmi, (match, variable, param) => {
       return 'puts ' + param + '\n' + variable + ' = gets.chomp'
     })
 
+    // import statements haven't been handled yet, so there are replaced with a placeholder that gets automatically deleted
     code = code.replace(/^.*@DELETE@.*$/gmi, (match) => {
       return ''
     })
 
+    // code only valid in JS
     code = code.replace(/^.+PromptSync.*$/gmi, '')
+
+    // replace JS file I/O calls with Ruby ones 
 
     code = code.replace(/fs\.writeFileSync\((.+),\s(.+)\)/gmi, (match, file, content) => {
       return "File.open(" + file + ", 'w') { |file| file.print(" + content + ") }"
@@ -102,6 +112,7 @@ export class RubyTranspiler extends TranspilerSuper {
       return "File.open(" + file + ", 'r').read()"
     })
 
+    // replace calls to Math.pow with the exponentiation operator (**)
     code = code.replace(/Math.pow\(([^,]+),\s([^,]+)\)/gmi, (match, param1, param2) => {
       return `(${param1}) ** (${param2})`
     })

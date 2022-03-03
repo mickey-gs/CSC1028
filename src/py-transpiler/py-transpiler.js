@@ -40,17 +40,22 @@ export class PyTranspiler extends TranspilerSuper {
       code = code.replaceAll(key, this.corrections[key]);
     }
 
+    // automatically import any Python libraries that are used in the code
     for (const module of this.corrections.imports) {
       if (code.search(module + '.') !== -1) {
         code = 'import ' + module + '\n\n' + code
       }
     }
 
+    // replace calls to var.length with len(var)
     let regex = /(\w+)\.length/gi;
     code = code.replace(regex, 'len($1)');
+    
+    // replace calls to math.cbrt(var) with var ** 1. / 3 
     regex = /math.cbrt\(([^\)]+)\)/gm;
     code = code.replace(regex, "(($1) ** (1. / 3))")
 
+    // Python has no increment operator
     regex = /(\w+)\+\+/gmi
     code = code.replace(regex, '$1 += 1')
 
@@ -66,10 +71,12 @@ export class PyTranspiler extends TranspilerSuper {
       return 'print(' + args.join(' + ') + ')\n'
     })
 
+    // replace logical negation operator with 'not'
     code = code.replace(/([^\w])!(?!=)(.+\s)/gmi, (match, preceding, operand) => {
       return preceding + ' not ' + operand
     })
 
+    // replace all regex literals with constructed regexes
     let isRegex = false
     let reg = ""
     code = code.replace(/(\w+)\.match\(\/(.+)\/(\w+)\)/gmi, (match, arg, regex, tags) => {
@@ -81,23 +88,29 @@ export class PyTranspiler extends TranspilerSuper {
       code = 'import re\n\nregex = re.compile("' + reg + '")\n' + code
     }
 
+    // Python doesn't have split, but it does have a list constructor
     code = code.replace(/(\w+).split\(""\)/gmi, (match, arg) => {
       return 'list(' + arg + ')'
     })
 
+    // Python does not do list.join(char), it does char.join(list)
     code = code.replace(/(\w+).join\((.+)\)/gmi, (match, arg, joiner) => {
       return joiner + '.join(' + arg + ')'
     })
 
+    // Python does not have .includes, it has 'in'
     code = code.replace(/(\w+).includes\((.+)\)/gmi, (match, callee, arg) => {
       return arg + ' in ' + callee
     })
 
+    // import statements haven't been handled yet, so there are replaced with a placeholder that gets automatically deleted
     code = code.replace(/^.*@DELETE@.*$/gmi, (match) => {
       return ''
     })
 
     code = code.replace(/^.+PromptSync.*$/gmi, '')
+
+    // replace JS file I/O calls with Ruby ones 
 
     code = code.replace(/fs\.writeFileSync\((.+),\s(.+)\)/gmi, (match, file, content) => {
       return "open(" + file + ", 'w').write(" + content + ")"
