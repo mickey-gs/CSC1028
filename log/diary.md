@@ -170,3 +170,15 @@ I showed my draft to my dad. I thought that his background in programming would 
 I also managed to show it to my mate doing Software Engineering at Ulster. He said he felt like he got a good sense of what the project was trying to do, and that he'd be able to work on it after reading through the article. He was briefly concerned that I was trying to get him to do my course work for me, so I had to explain that I was just asking him "Would you be able to work on this?" as a hypothetical.
 
 I was testing out my npm package by installing it in a test directory. I noticed something concerning, however: npm highlights several 'moderate vulnerabilities' in Semantic. These all seem to be due to a vulnerability existing in prompt-sync, so I'll probably just uninstall it in the Semantic repository and direct users to install it themselves, as it is the only method command line input supported at this time.
+
+### Thursday, 3rd March, 2021
+
+Got some really good feedback from John yesterday during the call. He told me that he had never been sure from my diary what stage of the project I was actually at, which briefly induced some panic. However, looking back, I do talk a lot about what I want to do next, and what I've done, but often don't mention the things I *haven't* done, either by being advised not to or just prioritising something else. I have therefore been very specific in the deliverable about exactly what Semantic supports, and have given several examples from the test suite. I've also given several clear goals of what I want to work on next for Semantic. This not only helps with communicating exactly where I'm at in regards to workflow, but adds in to something else John talked about- making sure another student would be glad of the format that the deliverable is in. 
+
+I think if I were another student being given this project to work on, I would be happy with the format it's in now, after I made the additions John suggested.
+- I have made the commercial value of my project more clear. I have given several examples of libraries that, if ported, would provide a lot of use to the development community. I have made how they're useful more obvious as well.
+- I have clearly communicated what features are implemented in Semantic, and why I've tackled them in the order I have: focusing first on implementing a solid foundation that allows for writing functional programs. 
+- I have given a list of items that should be worked on next, so that a student being given this project has a clear idea of what they should be working on.
+- I have given an in-depth list of useful resources for development, as well as explaining how my source code works. This should make adding additional source code as easy as possible.
+
+I am now confident that this is a piece of media that would be very useful for another student, as I explain the use, features, goals, and source code for my project in a way that is hopefully not just explanatory, but motivating. My hope is that another student would see this and not only understand how to add to my project, but have the motivation to *want* to add to my project.

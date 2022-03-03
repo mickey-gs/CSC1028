@@ -24,7 +24,7 @@ else if (choice == 8) {
     contents = fs.readFileSync("./tests/hangman.js")
 }
 else {
-    contents = fs.readFileSync(`./tests/${options[choice]}.js`)
+    contents = fs.readFileSync(`./tests/${options[choice - 1]}.js`)
 }
 console.log("\n************************************")
 console.log("Original script:\n" + contents)

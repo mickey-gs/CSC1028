@@ -77,6 +77,7 @@
                 padding: 3px;
                 margin-top: 20px;
                 margin-bottom: 20px;
+                white-space: pre-wrap;
             }
 
             .inlineCode {
@@ -115,7 +116,7 @@
                 The ability to port code to different languages has many potential benefits to developers. Chief among these is the ability to easily port libraries between different programming languages. This is of immense benefit to developers, as there are many libraries of great utility that may only be available in a handful of languages; as such, developers wishing to use the functionality of these libraries are limited in terms of what programming language they want to use. For example, several valuable graphics libraries are only available in JavaScript, such as <a href="https://threejs.org/" target="_blank">three.js</a> and <a href="https://www.electronjs.org/" target="_blank">Electron</a>. Another use case is libraries that implement the same features, but in very different ways. For example, setting up a web server in Java requires either interacting with sockets and bufferstreams directly, or using a complex library like <a href="https://tomcat.apache.org/index.html" target="_blank">Apache Tomcat</a>. In Python it can be as simple as installing <a href="https://pypi.org/project/Flask/" target="_blank">Flask</a> and running a one-line script. Being able to access high-value libraries from a wide set of languages, as well as being able to use them with a standard interface, would save a great deal of development time- a library would only have to be learned once, and its functionality could be accessed from a variety of different languages. Additionally, this would remove the need for a developer to implement something themselves, that already exists in a library, just because that library is in another language.
             </p> 
             <p>
-                I have previously written about <a href="deliverable1.html" target="_blank">how to write language-agnostic code</a>. I see writing idiomatic code to be a potential roadblock of progress, particularly by its tendency to amplify technical debt, restricting a developer to the language they chose at the start of development. Writing language-agnostic code is important for maximising the portability of code and the freedom of the developer who writes it. This package also intends to work toward this by making code conversion a simpler, more automated process. This would have the added benefit of making a developer's work more marketable, as they would be able to easily convert any libraries they write to other languages, increasing the market for the code they write.
+                I have previously written about <a href="deliverable1.html" target="_blank">how to write language-agnostic code</a>. I see writing idiomatic code to be a potential roadblock of progress, particularly by its tendency to amplify technical debt, restricting a developer to the language they chose at the start of development. Writing language-agnostic code is important for maximising the portability of code and the freedom of the developer who writes it. This package also intends to work toward this by making code conversion a simpler, more automated process. This would have the added benefit of making a developer's work more marketable, as they would be able to easily convert any libraries they write to other languages, increasing the market for their code.
             </p>
             <p>
                 Other benefits include: reducing technical debt by making it easier to switch language during the production of software; making code easier to port between different platforms; helping developers to not worry about what language they choose to use at the start of a project; and many more.
@@ -133,7 +134,7 @@ npm install @mickey-gs/semantic</pre>
             <pre class="codeSnippet">
 import { toRuby, toPython } from "@mickey-gs/semantic"
 
-const jsCode = fs.readFileSync("script.js")
+const jsCode = "console.log('Some example code')" // the code can come from the same script or an external file, as long as it is passed as a string
 const rubyCode = toRuby(jsCode)
 const pythonCode = toPython(jsCode)</pre>
 
@@ -160,12 +161,21 @@ const pythonCode = toPython(jsCode)</pre>
                 While this project does not support the full feature set of Node.js at this time, it supports enough features to build some basic but fully functional applications. As of the time of writing, the project supports:
             </p>
             <ul>
-                <li>Command Line I/O</li>
+                <li>Command Line I/O, using <a href="https://www.npmjs.com/package/prompt-sync" target="_blank"><span class="inlineCode">prompt-sync</span></a></li>
                 <li>File I/O</li>
                 <li>Functions, including higher order functions (functions that take other functions as arguments)</li>
                 <li>Loops (for, while and do while)</li>
                 <li>Arithmetic, operators and variables (including arrays)</li>
             </ul>
+            <p>
+                Note that prompt-sync should be used with the following syntax in projects that are being transpiled with Semantic:
+            </p>
+            <pre class="codeSnippet">
+import PromptSync from 'prompt-sync'
+const prompt = PromptSync()</pre>
+            <p>
+                This is due to the relative complexity of implementing native function calls for command line input, as opposed to <span class="inlineCode">prompt-sync</span>'s more conventional API. I thought it would be more important to implement support for <span class="inlineCode">prompt-sync</span> and continue development on the rest of the program than to focus on command line input, although I do intend to eventually support native functionality.
+            </p>
             <p>
                 Development has so far been based on the outline of my guide to building language-agnostic code. This means that I have written the code for this project mostly in the order I discuss language features in the guide, starting with the basics of a programming language, and working up in complexity. The latest features are the command line I/O and file I/O systems. The goal of this project is not to fulfill the full specification of JavaScipt in other languages, with lots of language-specific features and abstractions, but to implement enough for useful, maintainable code to be ported easily. The focus will then shift to expanding the scope of the project, incorporating other languages and technologies. 
             </p>
@@ -175,31 +185,618 @@ const pythonCode = toPython(jsCode)</pre>
             <p>
                 One feature I did choose to implement was higher order functions. This is because both JavaScript and Python support it natively, Ruby supports it through the use of specific syntax and C++ (a language that I would like to support in the future) supports it through the use of function pointers. This feature was an ideal candidate for implementation as a high-level abstraction, due to both having a valid use in development (runtime polymorphism), and being readily available in my target languages. Additionally, function pointers have a long history of use, having been <a href="https://www.cprogramming.com/tutorial/function-pointers.html" target="_blank">available since C</a>.
             </p>
+            <p>
+                I have developed these features in the order that I have because I first wanted to build a solid, foundational MVP to demonstrate Semantic and its use. Now that this is completed, I want to move on to supporting advanced language features that are commonly used in popular libraries, and supporting other languages.
+            </p>
 
             <h2>Goals</h2>
             <p>
-                The eventual goal of this project would be to allow the porting of libraries to other languages to become a more streamlined and automated process, eliminating the need for developers to commit to a certain language for development solely based on the libraries available in it.
+                So far, I have focused on implementing more basic language features in two languages that are quite similar to JavaScript. The next steps in development would then logically be implementing more advanced language features, and addressing languages that are less similar to JavaScript.
             </p>
             <p>
-                There are other features that would have to be added to the project for this to become a viable use case. Many popular libraries take an object-oriented approach to development, such as three.js, and acorn.js (which is used in this project). For this project to be able to port these libraries, it would have to support generating class structures in other languages, so this is a major goal for the future. 
+                The eventual goal of this project is to make the porting of libraries to other languages a more streamlined and automated process, eliminating the need for developers to commit to a certain language for development solely based on the libraries available in it.
+            </p>
+            <p>
+                There are several features that would have to be added to the project for this to become a viable use case. Many popular libraries take an object-oriented approach to development, such as three.js, and acorn.js (which is used in this project). For this project to be able to port these libraries, it would have to support generating class structures in other languages, so this is a major goal for the future. 
             </p>
             <p>
                 Another very common feature is importing code from other files- however, this is implemented in a very different manner across different languages (C++'s header files, Java imports, JavaScript imports). The goal regarding this would therefore primarily be investigating whether it is even possible to automatically generate import statements in a target language.
             </p>
             <p>
-                In terms of language support, moving on to support C++ is another major goal, due to the speed of compiled C++ programs. Additionally, C++ has wide use in industry, from <a href="https://docs.unrealengine.com/4.27/en-US/" target="_blank">game engines</a> to <a href="https://www.qt.io/develop" target="_blank">visual applications</a>. C++ is also a language I know quite well, which makes it preferable to other low-level, compiled languages (such as Rust).
+                In terms of language support, moving on to support C++ is another major goal, due to the speed of compiled C++ programs. Additionally, C++ has wide use in industry, from <a href="https://docs.unrealengine.com/4.27/en-US/" target="_blank">game engines</a> to <a href="https://www.qt.io/develop" target="_blank">visual applications</a>. C++ is also a language I know quite well, which makes it preferable to other low-level, compiled languages (such as Rust). The major challenge in this is type inference. Some types can be inferenced easily from assignment to literals (such as strings, vectors, ints, doubles, etc), but other type inferences will pose a major challenge in this project's development.
+            </p>
+            <p>
+                Additionally, command line input is only supported for the node module prompt-sync. I would like to expand this in future to support native function calls, but as of now the use of prompt-sync is sufficient for development purposes.
             </p>
             
             <h2>Examples</h2>
             <p>
-                Below, an example of Semantic's functionality is shown, where a user runs the test script and chooses to see the "higher order functions" test case. 
+                Below, some examples of Semantic's functionality are shown, where a user runs the test script and chooses a selection of options chosen to highlight Semantic's feature. 
             </p>
-            <div id="examplesBox">
-                <img src="images/npm-test-1.png" style="width: 50%;">
-                <img src="images/npm-test-2.png" style="width: 50%;">
-                <img src="images/npm-test-3.png" style="width: 50%;">
-                <img src="images/npm-test-4.png" style="width: 50%;">
-            </div>
+            <h3>-Function Calls and Conditional Statements</h3>
+            <p>
+                Here is an example of Semantic's ability to translate function definitions, calls, and conditional statements from JavaScript to Ruby and Python.
+            </p>
+            <pre class="codeSnippet">npm test
+
+> @mickey-gs/semantic@1.2.1 test
+> node test.js
+
+There are several test cases available, each of which showcases some of Semantic's functionality. Pick a test case, and its source code will be displayed, followed by its automatically generated equivalents in Python and Ruby.
+Option 1: basics
+Option 2: arithmetic
+Option 3: functions
+Option 4: conditionals
+Option 5: loops
+Option 6: higher order functions
+Option 7: files
+Option 8: hangman (long test case- a fully functional hangman game)
+Which test would you like to run? 4
+
+************************************
+Original script:
+// The transpiler should be able to process conditional statements correctly, including statements with consequent and alternate statements.
+
+function squareOrCube(num) {
+    let square = (Math.floor(Math.sqrt(num)) == Math.sqrt(num))
+    let cube = (Math.floor(Math.cbrt(num)) == Math.cbrt(num))
+
+    if (square && cube) {
+        return "This number is a square and a cube!"
+    }
+    else if (square) {
+        return "This number is a square!"
+    }
+    else if (cube) {
+        return "This number is a cube!"
+    }
+    else {
+        return "This number isn't very interesting."
+    }
+}
+
+function isEven(num) {
+    return (num % 2 == 0 ? 'even' : 'odd')
+}
+
+console.log(squareOrCube(64))
+console.log(squareOrCube(9))
+console.log(squareOrCube(125))
+console.log(squareOrCube(37))
+console.log(isEven(4))
+
+
+************************************
+Ruby code:
+def squareOrCube(num)
+    square = (Math.sqrt(num)) == Math.sqrt(num).floor
+    cube = (Math.cbrt(num)) == Math.cbrt(num).floor
+    if square && cube
+    return "This number is a square and a cube!"
+    elsif square
+    return "This number is a square!"
+    elsif cube
+    return "This number is a cube!"
+    else 
+    return "This number isn't very interesting."
+    end
+end
+
+def isEven(num)
+    return ((num % 2) == 0 ? "even" : "odd")
+end
+
+puts((squareOrCube(64)).to_s)
+puts((squareOrCube(9)).to_s)
+puts((squareOrCube(125)).to_s)
+puts((squareOrCube(37)).to_s)
+puts((isEven(4)).to_s)
+
+************************************
+Python code:
+import math
+
+def squareOrCube(num):
+    square = math.floor(math.sqrt(num)) == math.sqrt(num)
+    cube = math.floor(((num) ** (1. / 3))) == ((num) ** (1. / 3))
+    if square and cube:
+    return "This number is a square and a cube!"
+    elif square:
+    return "This number is a square!"
+    elif cube:
+    return "This number is a cube!"
+    else:
+    return "This number isn't very interesting."
+
+def isEven(num):
+    return ("even" if (num % 2) == 0 else "odd")
+
+print(str(squareOrCube(64)))
+print(str(squareOrCube(9)))
+print(str(squareOrCube(125)))
+print(str(squareOrCube(37)))
+print(str(isEven(4)))</pre>
+
+            <h3>-Loops</h3>
+            <p>
+                The test below shows Semantic's ability to accurately transpile loops, combined with conditions and function definitions. I have written these in the style I advocate for in my guide to writing language-agnostic code.
+            </p>
+            <pre class="codeSnippet">
+                npm test
+
+> @mickey-gs/semantic@1.2.1 test
+> node test.js
+
+There are several test cases available, each of which showcases some of Semantic's functionality. Pick a test case, and its source code will be displayed, followed by its automatically generated equivalents in Python and Ruby.
+Option 1: basics
+Option 2: arithmetic
+Option 3: functions
+Option 4: conditionals
+Option 5: loops
+Option 6: higher order functions
+Option 7: files
+Option 8: hangman (long test case- a fully functional hangman game)
+Which test would you like to run? 5
+
+************************************
+Original script:
+// These test cases cover loops, recursion and arrays
+
+function mean(array) {
+    let i = 0
+    let sum = 0
+    while (i &lt; array.length) {
+        sum += array[i]
+        i += 1
+    }
+    return sum / array.length
+}
+
+function sum(array) {
+    let sum = 0
+    for (let i = 0; i &lt; array.length; i++) {
+        sum += array[i]
+    }
+
+    return sum
+}
+
+function factorial(integer) {
+    if (integer == 1 || integer == 0) return 1
+
+    return integer * factorial(integer - 1) 
+}
+
+console.log('The mean of the numbers 1 to 10: ' + mean([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+console.log('The sum of the numbers 1 to 10: ' + sum([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+console.log('10 factorial: ' + factorial(10))
+
+
+************************************
+Ruby code:
+def mean(array)
+  i = 0
+  sum = 0
+  while (i &lt; array.length)
+    sum += array[i]
+    i += 1
+  end
+  return sum / array.length
+end
+
+def sum(array)
+  sum = 0
+  i = 0
+  while (i &lt; array.length)
+    sum += array[i]
+    i += 1
+  end
+  return sum
+end
+
+def factorial(integer)
+  if integer == 1 || integer == 0
+    return 1
+  end
+  return integer * factorial(integer - 1)
+end
+
+puts("The mean of the numbers 1 to 10: " + (mean([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).to_s)
+puts("The sum of the numbers 1 to 10: " + (sum([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).to_s)
+puts("10 factorial: " + (factorial(10)).to_s)
+
+************************************
+Python code:
+def mean(array):
+  i = 0
+  sum = 0
+  while (i &lt; len(array)):
+    sum += array[i]
+    i += 1
+  return sum / len(array)
+
+def sum(array):
+  sum = 0
+  i = 0
+  while (i &lt; len(array)):
+    sum += array[i]
+    i += 1
+  return sum
+
+def factorial(integer):
+  if integer == 1 or integer == 0:
+    return 1
+  return integer * factorial(integer - 1)
+
+print("The mean of the numbers 1 to 10: " + str(mean([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])))
+print("The sum of the numbers 1 to 10: " + str(sum([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])))
+print("10 factorial: " + str(factorial(10)))</pre>
+
+            <h3>-Higher Order Functions</h3>
+            <p>
+                Higher order functions are a common and easy-to-use method of implementing run-time polymorphism in a program. Semantic is able to recognise when they are used, and correct Ruby code to use the syntax for them to work.
+            </p>
+            <pre class="codeSnippet">
+                npm test
+
+> @mickey-gs/semantic@1.2.1 test
+> node test.js
+
+There are several test cases available, each of which showcases some of Semantic's functionality. Pick a test case, and its source code will be displayed, followed by its automatically generated equivalents in Python and Ruby.
+Option 1: basics
+Option 2: arithmetic
+Option 3: functions
+Option 4: conditionals
+Option 5: loops
+Option 6: higher order functions
+Option 7: files
+Option 8: hangman (long test case- a fully functional hangman game)
+Which test would you like to run? 6
+
+************************************
+Original script:
+function calculator(a, b, func) {
+    return func(a, b)
+}
+
+function multiply(a, b) {
+    return a * b
+}
+
+function exponentiate(a, b) {
+    return Math.pow(a, b)
+}
+
+console.log(calculator(multiply(2, 5), 5, multiply))
+
+
+************************************
+Ruby code:
+def calculator(a, b, func)
+  return func.call(a, b)
+end
+
+def multiply(a, b)
+  return a * b
+end
+
+def exponentiate(a, b)
+  return (a) ** (b)
+end
+
+puts((calculator(multiply(2, 5), 5, method(:multiply))).to_s)
+
+************************************
+Python code:
+import math
+
+def calculator(a, b, func):
+  return func(a, b)
+
+def multiply(a, b):
+  return a * b
+
+def exponentiate(a, b):
+  return math.pow(a, b)
+
+print(str(calculator(multiply(2, 5), 5, multiply)))</pre>
+
+            <h3>-File I/O</h3>
+            <p>
+                File I/O systems can vary widely in terms of API in different languages. The example below shows some common operations that can be converted to using the correct calls for other languages.
+            </p>
+            <pre class="codeSnippet">
+                npm test
+
+> @mickey-gs/semantic@1.2.1 test
+> node test.js
+
+There are several test cases available, each of which showcases some of Semantic's functionality. Pick a test case, and its source code will be displayed, followed by its automatically generated equivalents in Python and Ruby.
+Option 1: basics
+Option 2: arithmetic
+Option 3: functions
+Option 4: conditionals
+Option 5: loops
+Option 6: higher order functions
+Option 7: files
+Option 8: hangman (long test case- a fully functional hangman game)
+Which test would you like to run? 6
+
+************************************
+Original script:
+function calculator(a, b, func) {
+    return func(a, b)
+}
+
+function multiply(a, b) {
+    return a * b
+}
+
+function exponentiate(a, b) {
+    return Math.pow(a, b)
+}
+
+console.log(calculator(multiply(2, 5), 5, multiply))
+
+
+************************************
+Ruby code:
+def calculator(a, b, func)
+  return func.call(a, b)
+end
+
+def multiply(a, b)
+  return a * b
+end
+
+def exponentiate(a, b)
+  return (a) ** (b)
+end
+
+puts((calculator(multiply(2, 5), 5, method(:multiply))).to_s)
+
+************************************
+Python code:
+import math
+
+def calculator(a, b, func):
+  return func(a, b)
+
+def multiply(a, b):
+  return a * b
+
+def exponentiate(a, b):
+  return math.pow(a, b)
+
+print(str(calculator(multiply(2, 5), 5, multiply)))
+            </pre>
+
+            <h3>-A Hangman Game</h3>
+            <p>
+                This is a longer example, combining many features already mentioned. This is a fully functional hangman game. However, the word chosen to play against is always the same, as this is only a demo, not necessarily a game meant to be played.
+            </p>
+
+            <pre class="codeSnippet">
+import PromptSync from 'prompt-sync'
+const prompt = PromptSync()
+
+function hangMan() {
+  let guesses = []
+  let gameOver = false
+  const target = getRandomWord()
+
+  while (!gameOver) {
+    guesses.push(getGuess(guesses))
+
+    gameOver = processGuesses(target, guesses)
+
+    displayProgress(target, guesses)
+  }
+
+  console.log("Thank you for playing!")
+}
+
+function getGuess(guesses) {
+  let valid = true
+  let guess = ""
+
+  do {
+      valid = true
+      guess = prompt('->Enter a letter: ')
+
+      if (guess.length !== 1 || !guess.match(/[a-z]/i) || guesses.includes(guess)) {
+        valid = false
+        console.log("Please enter a single letter that you haven't guessed before.")
+      }
+  } while (!valid)
+
+  return guess
+}
+
+function processGuesses(target, guesses) {
+  if (guesses.length == 8) return true
+
+  for (let i = 0; i &lt; target.length; i++) {
+    if (!guesses.includes(target[i])) return false
+  }
+
+  return true
+}
+
+function displayProgress(target, guesses) {
+  let dummyWord = '*' * target.length
+
+  for (let i = 0; i &lt; target.length; i++) {
+    if (guesses.includes(target[i])) {
+      let dummyArray = dummyWord.split('')
+      dummyArray[i] = target[i]
+      dummyWord = dummyArray.join('')
+    }
+  }
+
+  console.log("->Letters guessed:")
+  console.log(guesses)
+  console.log('->Target: ' + dummyWord)
+
+  console.log('->Guesses left: ' + (8 - guesses.length))
+
+  if (guesses.length == 8) {
+    console.log("You lose. :(")
+    return
+  }
+
+  if (dummyWord == target) {
+    console.log('You Win! Congratulations!')
+  }
+}
+
+function getRandomWord() {
+  // word chosen randomly by me. This placeholder is used as it is not in the test's scope to choose between a list of genuine random words
+  return 'burger'
+}
+
+hangMan()
+
+************************************
+Ruby code:
+
+
+def hangMan()
+  guesses = []
+  gameOver = false
+  target = getRandomWord()
+  while (!gameOver)
+    guesses.push(getGuess(guesses))
+    gameOver = processGuesses(target, guesses)
+    displayProgress(target, guesses)
+  end
+  puts("Thank you for playing!")
+end
+
+def getGuess(guesses)
+  valid = true
+  guess = ""
+  loop do
+    valid = true
+    puts "->Enter a letter: "
+guess = gets.chomp
+    if guess.length != 1 || !guess.match(/[a-z]/i) || guesses.include?(guess)
+      valid = false
+      puts("Please enter a single letter that you haven't guessed before.")
+    end
+   break unless (!valid) 
+  end
+  return guess
+end
+
+def processGuesses(target, guesses)
+  if guesses.length == 8
+    return true
+  end
+  i = 0
+  while (i &lt; target.length)
+    if !guesses.include?(target[i])
+      return false
+    end
+    i += 1
+  end
+  return true
+end
+
+def displayProgress(target, guesses)
+  dummyWord = "*" * target.length
+  i = 0
+  while (i &lt; target.length)
+    if guesses.include?(target[i])
+      dummyArray = dummyWord.split("")
+      dummyArray[i] = target[i]
+      dummyWord = dummyArray.join("")
+    end
+    i += 1
+  end
+  puts("->Letters guessed:")
+  puts((guesses).to_s)
+  puts("->Target: " + (dummyWord).to_s)
+  puts("->Guesses left: " + ((8 - guesses.length)).to_s)
+  if guesses.length == 8
+    puts("You lose. :(")
+    return
+  end
+  if dummyWord == target
+    puts("You Win! Congratulations!")
+  end
+end
+
+def getRandomWord()
+  return "burger"
+end
+
+hangMan()
+
+************************************
+Python code:
+import re
+
+regex = re.compile("[a-z]")
+
+
+def hangMan():
+  guesses = []
+  gameOver = False
+  target = getRandomWord()
+  while ( not gameOver):
+    guesses.append(getGuess(guesses))
+    gameOver = processGuesses(target, guesses)
+    displayProgress(target, guesses)
+  print("Thank you for playing!")
+
+def getGuess(guesses):
+  valid = True
+  guess = ""
+  while True:
+    valid = True
+    guess = input("->Enter a letter: ")
+    if len(guess) != 1 or  not regex.match(guess) or guess in guesses:
+      valid = False
+      print("Please enter a single letter that you haven't guessed before.")
+    if not ( not valid):
+      break
+  
+  return guess
+
+def processGuesses(target, guesses):
+  if len(guesses) == 8:
+    return True
+  i = 0
+  while (i &lt; len(target)):
+    if  not target[i] in guesses:
+      return False
+    i += 1
+  return True
+
+def displayProgress(target, guesses):
+  dummyWord = "*" * len(target)
+  i = 0
+  while (i &lt; len(target)):
+    if target[i] in guesses:
+      dummyArray = list(dummyWord)
+      dummyArray[i] = target[i]
+      dummyWord = "".join(dummyArray)
+    i += 1
+  print("->Letters guessed:")
+  print(str(guesses))
+  print("->Target: " + str(dummyWord))
+  print("->Guesses left: " + str((8 - len(guesses))))
+  if len(guesses) == 8:
+    print("You lose. :(")
+    return
+  if dummyWord == target:
+    print("You Win! Congratulations!")
+
+def getRandomWord():
+  return "burger"
+
+hangMan()</pre>
 
             <h2>References</h2>
             <p>
@@ -317,7 +914,7 @@ code = code.replace(/fs\.writeFileSync\((.+),\s(.+)\)/gmi, (match, file, content
 
             <h3>The Code</h3>
             <p>
-                The full source code can be found at <a href="https://github.com/mickey-gs/semantic/tree/main/src" target="_blank">this project's Github repository</a>. Each transpiler has its own folder within the larger <span class="inlineCode">src</span> folder.
+                The full source code can be found at <a href="https://github.com/mickey-gs/semantic/tree/main/src" target="_blank">this project's Github repository</a>. Each transpiler has its own folder within the larger <span class="inlineCode">src</span> folder. For a new contributor, I would suggest either working on implementing class funcionality in the existing transpilers, or on building a transpiler for C++ from the existing source code, using the other transpilers as reference.
             </p>
             </div>
         </div>

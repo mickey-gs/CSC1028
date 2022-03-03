@@ -102,6 +102,10 @@ export class RubyTranspiler extends TranspilerSuper {
       return "File.open(" + file + ", 'r').read()"
     })
 
+    code = code.replace(/Math.pow\(([^,]+),\s([^,]+)\)/gmi, (match, param1, param2) => {
+      return `(${param1}) ** (${param2})`
+    })
+
     return code
   }
 
