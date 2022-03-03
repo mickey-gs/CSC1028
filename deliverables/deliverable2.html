@@ -104,7 +104,7 @@
 
             <h2>Introduction: What is Semantic?</h2>
             <p>
-                Semantic is a project designed to allow developers to rapidly prototype and develop source code in a range of different programming languages by automatically converting source code in one language into another. Right now, Semantic is still in its infancy; it allows for the conversion of basic JavaScript into Python and Ruby. Semantic is open-source, and the source code is available <a href="https://www.github.com/mickey-gs/semantic" target="_blank">on Github</a>.
+                Semantic is a project designed to allow developers to automatically port source code between different programming languages. Right now, Semantic is still in its infancy; it allows for the conversion of basic JavaScript into Python and Ruby. Semantic is open-source, and the source code is available <a href="https://www.github.com/mickey-gs/semantic" target="_blank">on Github</a>.
             </p>
 
             <h2>Motivation</h2>
@@ -112,10 +112,13 @@
                 In linguistics, the 'semantics' of a language refers to the meanings of that language's individual words. The 'syntax' of a language is its structure: how words and symbols have to be ordered to construct a valid sentence. It is from the first term, 'semantic', that this project's name is derived. Semantic aims to separate the syntax of a specific programming language from its semantics, and extract the function of code in order to easily port it between languages. 
             </p>
             <p>
-                I have previously written about <a href="deliverable1.html" target="_blank">how to write language-agnostic code</a>. I see writing idiomatic code to be a potential roadblock of progress, particularly by its tendency to amplify technical debt, restricting a developer to the language they chose at the start of development. Writing language-agnostic code is important for maximising the portability of code and the freedom of the developer who writes it. This package also intends to work toward this by making code conversion a simpler, more automated process.
+                The ability to port code to different languages has many potential benefits to developers. Chief among these is the ability to easily port libraries between different programming languages. This is of immense benefit to developers, as there are many libraries of great utility that may only be available in a handful of languages; as such, developers wishing to use the functionality of these libraries are limited in terms of what programming language they want to use. For example, several valuable graphics libraries are only available in JavaScript, such as <a href="https://threejs.org/" target="_blank">three.js</a> and <a href="https://www.electronjs.org/" target="_blank">Electron</a>. Another use case is libraries that implement the same features, but in very different ways. For example, setting up a web server in Java requires either interacting with sockets and bufferstreams directly, or using a complex library like <a href="https://tomcat.apache.org/index.html" target="_blank">Apache Tomcat</a>. In Python it can be as simple as installing <a href="https://pypi.org/project/Flask/" target="_blank">Flask</a> and running a one-line script. Being able to access high-value libraries from a wide set of languages, as well as being able to use them with a standard interface, would save a great deal of development time- a library would only have to be learned once, and its functionality could be accessed from a variety of different languages. Additionally, this would remove the need for a developer to implement something themselves, that already exists in a library, just because that library is in another language.
+            </p> 
+            <p>
+                I have previously written about <a href="deliverable1.html" target="_blank">how to write language-agnostic code</a>. I see writing idiomatic code to be a potential roadblock of progress, particularly by its tendency to amplify technical debt, restricting a developer to the language they chose at the start of development. Writing language-agnostic code is important for maximising the portability of code and the freedom of the developer who writes it. This package also intends to work toward this by making code conversion a simpler, more automated process. This would have the added benefit of making a developer's work more marketable, as they would be able to easily convert any libraries they write to other languages, increasing the market for the code they write.
             </p>
             <p>
-                This has many potential benefits to developers, such as: reducing technical debt by making it easier to switch language during the production of software; making code easier to port between different platforms; helping developers to not worry about what language they choose to use at the start of a project; and many more.
+                Other benefits include: reducing technical debt by making it easier to switch language during the production of software; making code easier to port between different platforms; helping developers to not worry about what language they choose to use at the start of a project; and many more.
             </p>
                 
             <h2>Getting Started</h2>
@@ -163,10 +166,27 @@ const pythonCode = toPython(jsCode)</pre>
                 Development has so far been based on the outline of my guide to building language-agnostic code. This means that I have written the code for this project mostly in the order I discuss language features in the guide, starting with the basics of a programming language, and working up in complexity. The latest features are the command line I/O and file I/O systems. The goal of this project is not to fulfill the full specification of JavaScipt in other languages, with lots of language-specific features and abstractions, but to implement enough for useful, maintainable code to be ported easily. The focus will then shift to expanding the scope of the project, incorporating other languages and technologies. 
             </p>
             <p>
-                There are several reasons for avoiding implementing all of JavaScript's full feature set. These include saving development time for more immediately useful features, discouraging the type of language specificity this project is trying to aid in reducing, and that other languages may not even implement said features.
+                There are several reasons for avoiding implementing all of JavaScript's full feature set. These include saving development time for more immediately useful language features, discouraging the type of language specificity this project is trying to aid in reducing, and that other languages may not even implement said features. 
+            </p>
+            <p>
+                One feature I did choose to implement was higher order functions. This is because both JavaScript and Python support it natively, Ruby supports it through the use of specific syntax and C++ (a language that I would like to support in the future) supports it through the use of function pointers. This feature was an ideal candidate for implementation as a high-level abstraction, due to both having a valid use in development (runtime polymorphism), and being readily available in my target languages. Additionally, function pointers have a long history of use, having been <a href="https://www.cprogramming.com/tutorial/function-pointers.html" target="_blank">available since C</a>.
+            </p>
+
+            <h2>Goals</h2>
+            <p>
+                The eventual goal of this project would be to allow the porting of libraries to other languages to become a more streamlined and automated process, eliminating the need for developers to commit to a certain language for development solely based on the libraries available in it.
+            </p>
+            <p>
+                There are other features that would have to be added to the project for this to become a viable use case. Many popular libraries take an object-oriented approach to development, such as three.js, and acorn.js (which is used in this project). For this project to be able to port these libraries, it would have to support generating class structures in other languages, so this is a major goal for the future. 
+            </p>
+            <p>
+                Another very common feature is importing code from other files- however, this is implemented in a very different manner across different languages (C++'s header files, Java imports, JavaScript imports). The goal regarding this would therefore primarily be investigating whether it is even possible to automatically generate import statements in a target language.
+            </p>
+            <p>
+                In terms of language support, moving on to support C++ is another major goal, due to the speed of compiled C++ programs. Additionally, C++ has wide use in industry, from <a href="https://docs.unrealengine.com/4.27/en-US/" target="_blank">game engines</a> to <a href="https://www.qt.io/develop" target="_blank">visual applications</a>. C++ is also a language I know quite well, which makes it preferable to other low-level, compiled languages (such as Rust).
             </p>
             
-            <h2>Example</h2>
+            <h2>Examples</h2>
             <p>
                 Below, an example of Semantic's functionality is shown, where a user runs the test script and chooses to see the "higher order functions" test case. 
             </p>
