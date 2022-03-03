@@ -30,6 +30,10 @@ export class TranspilerSuper {
     this.recursiveParse(node.expression);
   }
 
+  ImportDeclaration(node) {
+    this.buffer.add('@DELETE@\n')
+  }
+
   FunctionDeclaration(node) {
     this.recursiveParse(node.id);
     this.buffer.add("(");
@@ -67,12 +71,16 @@ export class TranspilerSuper {
 
   VariableDeclarator(node) {
     this.recursiveParse(node.id);
-    this.buffer.add(" = ");
-    this.recursiveParse(node.init);
+    if (node.init) {
+      this.buffer.add(" = ");
+      this.recursiveParse(node.init);
+    }
   }
 
   ReturnStatement(node) {
-    this.recursiveParse(node.argument);
+    if (node.argument) {
+      this.recursiveParse(node.argument);
+    }
   }
 
   CallExpression(node) {
@@ -89,7 +97,12 @@ export class TranspilerSuper {
   }
 
   MemberExpression(node) {
-    this.buffer.add(node.object.name);
+    if (node.object.name) {
+      this.buffer.add(node.object.name);
+    }
+    else {
+      this.recursiveParse(node.object)
+    }
     if (node.computed) {
       this.buffer.add("[");
       this.buffer.add(node.property.name);
@@ -173,6 +186,15 @@ export class TranspilerSuper {
     this.recursiveParse(node.body);
   }
 
+  DoWhileStatement(node) {
+    this.buffer.add('do')
+    this.recursiveParse(node.body)
+    this.buffer.trim()
+    this.buffer.add(' while (')
+    this.recursiveParse(node.test)
+    this.buffer.add(') ').newline()
+  }
+
   ForStatement(node) {
     this.buffer.add('for (')
     this.recursiveParse(node.init)
@@ -200,7 +222,12 @@ export class TranspilerSuper {
   }
 
   Literal(node) {
-    this.buffer.add(JSON.stringify(node.value));
+    if (node.regex) {
+      this.buffer.add(node.raw)
+    }
+    else {
+      this.buffer.add(JSON.stringify(node.value));    
+    }
   }
 
   ArrayExpression(node) {

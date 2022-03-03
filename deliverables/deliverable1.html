@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Deliverable 1</title>
+        <title>How to Write Language Agnostic Code</title>
 
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
@@ -24,7 +24,7 @@
             }
 
             p {
-                font-size: 120%;
+                font-size: 1.4em;
                 padding-bottom: 5px;
             }
 
@@ -75,14 +75,19 @@
 
             .codeSnippet {
                 font-family: monospace;
-                font-size: 120%;
-                background-color: black;
-                color: white;
-                width: fit-content;
+                font-size: 1.5em;
+                background-color: lightgray;
+                width: auto;
+                min-width: 100%;
                 line-height: 1em;
                 padding: 3px;
                 margin-top: 20px;
                 margin-bottom: 20px;
+            }
+
+            .inlineCode {
+                background-color: lightgray;
+                font-family: monospace;
             }
         </style>
     </head>
@@ -99,13 +104,13 @@
 
                 <h2>Introduction</h2>
                 <p>
-                    This guide is intended to teach developers how to write code that is easily portable among a subset of modern, widely-used programming languages. This is a vital skill to have in the early stages of working on a project, as writing language-agnostic code reduces technical debt. The developer is then granted much more freedom and versatility in what language they continue their development in, as it does not take as much work to port generic code as it does idiomatic code.<br>
+                    This guide is intended to teach developers how to write code that is easily portable among a set of modern, widely-used programming languages. This is a vital skill to have in the early stages of working on a project, as writing language-agnostic code reduces technical debt: the developer is granted more versatility in what language they continue their development in, as it does not take as much work to port generic code as it does to port idiomatic code.<br>
                     This guide starts with the basics of several languages in wide use (namely, C++, Java, JavaScript, Python, and Ruby, which I have enough experience in to discuss), and begins by outlining the features that make them Turing complete. The guide will then expand on the features that they share, and their more advanced features, which may differ greatly.
                 </p>
 
                 <h2>Turing Completeness</h2>
                 <p>
-                    For a programming language to be Turing complete, it must allow for conditional branching and the use of arbritrary amounts of memory. Almost all languages allow for conditional branching in at least the form of if/else statements, which are implemented in a fairly standard way.<br>
+                    For a programming language to be Turing complete, it must allow for conditional branching and the manipulation of arbritrary amounts of memory. The simplest form of conditional branching is assembly's conditional <span class="inlineCode">goto</span> statements. The equivalent of this in modern languages is <span class="inlineCode">if</span>/<span class="inlineCode">else</span> statements and function calls. Combined, these allow for conditional execution and recursion, which are required for Turing completeness. Conditional statements are implemented in a fairly standard way.<br>
                     C++, Java and JavaSript all have identical syntax for this:
                 </p>
                 <pre class="codeSnippet">
@@ -145,38 +150,147 @@ else:
 
 </pre>
             <p>
-                It can therefore be seen that if/else statements are inherently language agnostic, both due to their ubiquity and similar syntax in common programming languages. The use of arbritrary memory, however, is less than guaranteed, as no computer can possibly offer a program infinite memory use. As this requirement cannot be reasonably applied to any language, and is in all cases ignored when evaluating a language for Turing completeness, we will instead replace it with 'offers manipulation of memory'. What other features are shared widely enough to be language agnostic?
+                It can therefore be seen that <span class="inlineCode">if</span>/<span class="inlineCode">else</span> statements are inherently language agnostic, both due to their ubiquity and similar syntax in common programming languages. The use of arbritrary memory, however, is less than guaranteed, as no computer can possibly offer a program infinite memory use. As this requirement cannot be reasonably applied to any language, it can instead by replaced by 'offers manipulation of memory'- which all languages offer, even if memory manipulation is indirect. What other features are shared widely enough to be language agnostic?
             </p>
 
-            <h2>comments, variables, atomic types (basics)</h2>
+            <h2>Variables, Primitives, and Comments</h2>
             <p>
-                comments are all the same, assigning variables is mostly the same apart from the increment operator which is omitted from Ruby and Python (but trivially switched from one to the other via regex). keywords with assigning are different- ruby doesn't do consts (just warnings), C++ and Java have STATIC typing, leading to ->
-                The latter languages are dynamically typed, and allow things like assigning a different type to a variable, which the others don't- avoid this! not language agnostic, leads to errors.
+                All of these languages also sport near-identical syntax for assigning variables. Most consist of just <span class="inlineCode">variableName = value</span>, with some caveats. For example, C++ and Java are statically typed, so the type of the variable has to be declared at the time that it's initialised. (example of this) Additionally, it can also be specified whether or not that variable can be modified with the const keyword, as well as further properties such as <span class="inlineCode">static</span>, <span class="inlineCode">public</span>, etc.<br>
+                On the other hand, JavaScript, Python and Ruby are all dynamically typed, meaning that types are assigned to values, <em>not</em> variables. This allows the developer to specify variables without specifying type. In JavaScript, the variable has to be declared as <span class="inlineCode">const</span> or not <span class="inlineCode">const</span>, but in Ruby and Python the only restriction is that a variable is declared before it is used. It is therefore also possible in these languages to assign a variable to a different type. This is bad practice for writing language agnostic code, as it is not valid in statically typed languages. It's also bad practice in general- a variable should be have a sensible role in program logic, and changing this role by changing the variable's type makes it more difficult to follow a variable's role and what information it holds. 
+            </p>
+            <p>
+                In terms of primitive types, not much conscious effort would need to be dedicated to making language agnostic choices. The dynamically typed languages all don't need the user to declare any types, and Java and C++ have mostly the same primitive types. The main difference between the two is that C++ has many different, specific versions of the types (such as <span class="inlineCode">long long</span>, <span class="inlineCode">char8_t</span>, <span class="inlineCode">char16_t</span>, <span class="inlineCode">short</span>, etc).
+            </p>
+            <p>
+                Comments are mostly the same in all languages. The syntax for declaring long blocks of comments can vary, but what they all have in common is that a single line of comment can be denoted by:
+            </p>
+            <pre class="codeSnippet">
+// this is a comment on one line
+            </pre>
+            <p>
+                meaning that comments can very easily be written that require no porting at all. In any case, comments are secondary in importance to code and more detailed documentation, and will not take up much of the codebase's text (especially in a fledgling project). If moving to a different technology is a big possibility to consider in a project, then it is a good idea to thoroughly document features once they are implemented; re-implementing features is much simpler when working from a theoretical description of how it works than looking at the implementation itself, which can be confusing. Of course, it is a good idea in general to document completed features, as this makes it much easier for a new or returning developer to understand the code's purpose.
             </p>
 
-            <h2>Operators and maths</h2>
+            <h2>Operators and Maths</h2>
             <p>
-                Arithmetic operators are all shared (be sure to address division and implicit type conversion), take a look at bitwise operators, logical operators are a little different but regex that, powers, roots, etc are less standard but what're you gonna do yknow, this is just language differences but eh you can regex it if you really want, most uses are rare anyway
+                All of the languages discussed thus far share the majority of both arithmetical, logical, and bit-wise operators. One area where discrepancies arise, however, is with assignment operators: Ruby and JavaScript support assignments with logical operators (such as <span class="inlineCode">&&=</span> and <span class="inlineCode">||=</span>), while the others do not.<br>
+                A notable exception is that Python and Ruby do not support the increment or decrement operators- that is, it is not possible to use the <span class="inlineCode">val++</span> syntax to increment the variable <span class="inlineCode">val</span> by one. It is therefore more language agnostic to use <span class="inlineCode">val += 1</span><br>
+                It is important to note that, as a weakly typed language, JavaScript will perform many type coersions at run-time that the other languages would not. In JavaScript, <span class="inlineCode">1 / 2</span> will return <span class="inlineCode">0.5</span>, whereas the other languages would return <span class="inlineCode">0</span>; <span class="inlineCode">"11" + 1</span> will return <span class="inlineCode">"111"</span>, instead of a type error; and <span class="inlineCode">"11" - 1 </span> will return <span class="inlineCode">10</span>. Explicit type coercion is preferred for language agnostic code, both to avoid errors and to minimise the type of counterintuitive behaviour described above. This is especially true as even if an expression involving type coersion is valid in another language, it has no guarantee to have the same results.<br>
+                Additionally, C++ supports operator overloading. This means that a developer can define operators to have a new meaning for custom types, so it is, for example, possible to define a <span class="inlineCode">point</span> object responsible for managing an <span class="inlineCode">x</span> and a <span class="inlineCode">y</span> co-ordinate, and define the <span class="inlineCode">+</span> operator to mean returning a new object with the added <span class="inlineCode">x</span> and <span class="inlineCode">y</span> co-ordinate of each.
             </p>
 
-            <h2>Compound types</h2>
+            <h2>Non-Primitive Types</h2>
             <p>
-                This is where shit starts to hit the fan, but push and pop with vectors are pretty much universal so stick to these. maps/dictionaries also aren't too bad but make sure to ALSO KEEP TYPES CONSISTENT
+                Two non-primitive types common to all of these languages are the dynamic array (a sequence of elements of the same type, with a length that can increase or decrease) and the map (a data structure associating a set of elements of one type with a set of elements of a second type).
             </p>
 
-            <h2>loops and functions (last point of similarity)</h2>
+            <h2>Loops and Functions</h2>
             <p>
-                Goes back into all being the same again, ruby and python dont have normal for loops tho, also ruby has all those weirdo shit loops don't do them, also make sure that functions always return values of the same type or null or throw
+                An area where language similarity returns is in the syntax of loops and defining functions. While Python and Ruby don't support the classic <span class="inlineCode">for</span> loop (<span class="inlineCode">for (int i = 0; i &lt; value; i++)</span>), all of the covered languages support while loops, which are functionally equivalent to for loops. They also all, to some extent, support iterators, which add some ease of use over 'raw' loops. Some examples of how they implement these are shown below:
+            </p>
+            <pre class="codeSnippet">
+// C++
+for (std::vector&lt;int&lt;::iterator iter = vec.begin(); iter != vec.end(); iter++) {
+    std::cout &lt;&lt; *iter &lt;&lt; std::endl;
+}
+
+// Java
+Iterator&lt;int&lt; iter = list.iterator();
+while (iter.hasNext()) {
+    System.out.println(iter.next());
+}
+
+// JavaScript
+for (let elem of array) {
+    console.log(elem)
+}
+            </pre>
+            <p>
+                However, as can be seen, each language's approach to iterators can be wildly different. For easily portable code, it is better to stick with the simpler, less specfic <span class="inlineCode">while</span> loop syntax:
+            </p>
+            <pre class="codeSnippet">
+int i = 0
+while (i &lt; array.length()) {
+    System.out.println(array[i]);
+    i += 1;
+}
+            </pre>
+            <p>
+                With modifications for type, and reformatting of blocks, this code will work in all languages covered.
             </p>
 
-            <h2>Abstractions (like function pointers, classes, polymorphism)</h2>
             <p>
-                Basically ALWAYS about dynamic runtime behaviour, and not having to write similar code a bunch of times.
+                Functions are also very standard, with all languages using some variation on the ANSI C syntax for defining functions, shown below:
+            </p>
+            <pre class="codeSnippet">
+type foo(type x, type y) {
+
+    // some code
+
+    return value;
+}
+            </pre>
+            <p>
+                Different languages make some changes: Java requires keywords relating to class behaviours, JavaScript drops types, and Python and Ruby make some slight changes to syntax: 
+            </p>
+            <pre class="codeSnippet">
+// Python
+def foo(x, y):
+    // some code
+
+    return value
+
+// Ruby
+def foo(x, y) 
+    // some code
+
+    return value
+end
+            </pre>
+            <p>
+                Either way, there aren't many concerns here in the syntax of defining functions. There are, however issues in the <em>use</em> of functions, and what features they support in each language, which leads on to the next point.
             </p>
 
-            <h2>Where Languages Diverge (file io, ui and stuff)</h2>
+            <h2>Abstractions</h2>
             <p>
-                yeah shit just really hits the fan over here, C++ has streams, Java has io classes, some languages need imports for this some don't, it's all just a mess really but!! this sort of stuff should be reduced to a minimum/encapsulated in its own class, and the program basics should be implemented long before UI, which is finicky and should come at the end when everything else has been decided.
+                Many abstractions in programming are about reducing the conceptual complexity of writting a program. This can allow the programmer to think more about the high-level logic of the program, without losing development time or brain power on lower-level details. They also reduce the amount of code that has to be written. For example, functions allow for the use of repeated code, and objects with inheritance allow for which code is called to be specified at runtime. 
+            </p>
+            <p>
+                This is the level at which it becomes more difficult to maintain language agnosticism, simply due to the diversity with which different languages support different types of abstractions. For example, Java is famously tied to object oriented programming, requiring all code to be placed inside of classes. All of the other languages also support OOP, but with some differences, such as C++ supporting multiple inheritance (while Java only supports implenting multiple interfaces), and JavaScript not supporting truly private instance variables.
+            </p>
+            <p>
+                Another abstraction supported to different amounts by each language is the use of higher-order functions, meaning a function that can accept other functions as parameters. This is supported natively by JavaScript and Python, with the use of pointers in C++, with some special syntax in Ruby, and not at all in Java. In the latter two, lambdas are more commonly used for this purpose. Lambdas are also supported in the other languages, but with wide differences in syntax.
+            </p>
+
+            <h2>Where Languages Diverge</h2>
+            <p>
+                There are some areas of functionality where language differences are difficult or impossible to ignore in favour of agnosticism. This is actually encountered very quickly in most projects, as the implementation of I/O operations are very different across languages. Some require import statements to do any I/O (C++/Java), C++ does I/O operations through streams; Java uses objects, some of which have to be imported; Ruby, Python and JavaScipt all simply use function calls (though nodejs requires the importing of namespaced functions).
+            </p>
+            <p>
+                In cases similar to this (UI being another example), best practice would most likely be trying to keep this code as self-contained as possible. This would mean keeping code that processes information in its own functions, and code that controls I/O and UI in its own functions. An example of this is shown below, for a hypothetical snippet from a hangman game. The example is shown in JavaScript, but would not be too difficult to port.
+            </p>
+            <pre class="codeSnippet">
+function hangman() {
+    const target = randomWord()
+    let gameOver = false
+    let guesses = []
+
+    // capture and validate player's guess
+    while (!gameOver) {
+
+        // get guess, validate it, and add it to list of guesses
+        guesses.push(getGuess(guesses))
+
+        // check if the game is over
+        gameOver = checkProgress()
+
+        // display player's progress (guesses, progress towards target word, if they've won)
+        displayProgress(target, guesses)
+    }
+}
+            </pre>
+            <p>
+                Another notable strategy for maintaining language agnositicism is to implement any user-facing features last. Because of the high language specificity of these utilities, leaving this work to the last step means that the majority of the work is easy to port. Starting with front-end code means that if the project has to be ported, basically all of the work done so far is lost.
             </p>
             </div>
         </div>

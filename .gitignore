@@ -2,6 +2,5 @@ ast.json
 fizz-buzz.js
 hello-world.*
 output.js
-test.js
 /outputs
 /node_modules

@@ -6,7 +6,12 @@ export class RubyTranspiler extends TranspilerSuper {
 
   constructor() {
     super();
-    this.corrections = JSON.parse(fs.readFileSync("./src/ruby-transpiler/ruby.json"));
+    this.corrections = {
+      "else if": "elsif",
+      "console.log": "puts",
+      "!==": "!=",
+      "includes": "include?"
+    }
   }
 
   parse(node) {
@@ -14,11 +19,6 @@ export class RubyTranspiler extends TranspilerSuper {
     return this.correct(code)
   }
 
-  recursiveParse(node) {
-    this[node.type](node);
-    return this.buffer.get()
-  }
-  
   correct(code) {
     for (const key of Object.keys(this.corrections)) {
       code = code.replace(new RegExp(key, 'gmi'), this.corrections[key]);
@@ -53,8 +53,6 @@ export class RubyTranspiler extends TranspilerSuper {
         }
         replacer.i += 1
 
-        console.log(param)
-
         if (replacer.i == higherOrderFuncs[func]) {
           return 'method(:' + param + ')'
         }
@@ -62,7 +60,7 @@ export class RubyTranspiler extends TranspilerSuper {
         return param
       }
 
-      code = code.replace(new RegExp(`(.*(?<!def\\s)${func}\\()((\\w+(\\([^()]+\\))?(,\\s)?)+)(\\).+)`, 'gmi'), (match, preceding, params, opt1, opt2, opt3, following) => {
+      code = code.replace(new RegExp(`(.*(?<!def\\s)${func}\\()(([^()]+(\\([^()]+\\))?(,\\s)?)+)(\\).+)`, 'gmi'), (match, preceding, params, opt1, opt2, opt3, following) => {
         return preceding + params.replace(/\w+(\(.+\))?/gmi, replacer) + following
       })
     }
@@ -75,11 +73,33 @@ export class RubyTranspiler extends TranspilerSuper {
 
       for (let i = 0; i < args.length; i++) {
         if (args[i][0] != '\'' && args[i][0] != '"') {
-          args[i] = '(' + args[i] + ')' + '.to_s'
+          args[i] = '(' + args[i] + ').to_s'
         }
       }
 
       return 'puts(' + args.join(' + ') + ')\n'
+    })
+
+    code = code.replace(/(\w+) = prompt\((.+)\)/gmi, (match, variable, param) => {
+      return 'puts ' + param + '\n' + variable + ' = gets.chomp'
+    })
+
+    code = code.replace(/^.*@DELETE@.*$/gmi, (match) => {
+      return ''
+    })
+
+    code = code.replace(/^.+PromptSync.*$/gmi, '')
+
+    code = code.replace(/fs\.writeFileSync\((.+),\s(.+)\)/gmi, (match, file, content) => {
+      return "File.open(" + file + ", 'w') { |file| file.print(" + content + ") }"
+    })
+
+    code = code.replace(/fs\.appendFileSync\((.+),\s(.+)\)/gmi, (match, file, content) => {
+      return "File.open(" + file + ", 'a') { |file| file.print(" + content + ") }"
+    })
+
+    code = code.replace(/fs\.readFileSync\((.+)\)\.toString\(\)/gmi, (match, file, content) => {
+      return "File.open(" + file + ", 'r').read()"
     })
 
     return code
@@ -154,5 +174,16 @@ export class RubyTranspiler extends TranspilerSuper {
     if (!node.prefix) {
       this.buffer.add(node.operator)
     }
+  }
+
+  DoWhileStatement(node) {
+    this.buffer.add('loop do')
+    this.recursiveParse(node.body)
+    this.buffer.deleteLines(1)
+    this.buffer.add(' break unless (')
+    this.recursiveParse(node.test)
+    this.buffer.add(') ').newline()
+    this.buffer.add('end')
+    this.buffer.newline()
   }
 }
