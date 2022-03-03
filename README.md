@@ -1,6 +1,6 @@
 # semantic
 
-Hi! This is semantic, a project intended to allow developers to generate source code in a variety of different programming languages with ease. This README is intended to serve as a brief introduction to the project, but a more in-depth explanation is provided [here]()
+Hi! This is semantic, a project intended to allow developers to generate source code in a variety of different programming languages with ease. This README is intended to serve as a brief introduction to the project, but a more in-depth explanation is provided as 'deliverables2.html' in the deliverables folder.
 
 ## deliverables
 
