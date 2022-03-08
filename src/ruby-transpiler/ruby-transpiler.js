@@ -201,4 +201,12 @@ export class RubyTranspiler extends TranspilerSuper {
     this.buffer.add('end')
     this.buffer.newline()
   }
+
+  ClassMethod(node) {
+    this.buffer.add("def ")
+    if (node.static) {
+      this.buffer.add("self.")
+    }
+    super.ClassMethod(node)
+  }
 }

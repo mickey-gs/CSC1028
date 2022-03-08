@@ -20,11 +20,19 @@ export class TranspilerSuper {
     return this.buffer.get();
   }
 
+  File(node) {
+    this.recursiveParse(node.program);
+  }
+
   Program(node) {
-      for (let i = 0; i != node.body.length; i++) {
-        this.recursiveParse(node.body[i]);
-      }
+    for (let i = 0; i != node.body.length; i++) {
+      this.recursiveParse(node.body[i]);
     }
+  }
+
+  StringLiteral(node) {
+    this.buffer.add(node.extra.raw)
+  }
 
   ExpressionStatement(node) {
     this.recursiveParse(node.expression);
@@ -242,5 +250,31 @@ export class TranspilerSuper {
       this.recursiveParse(node.elements[i]);
     }
     this.buffer.add("]");
+  }
+
+  ClassDeclaration(node) {
+    this.buffer.add("class ");
+    this.recursiveParse(node.id);
+    this.recursiveParse(node.body);
+  }
+
+  ClassBody(node) {
+    this.BlockStatement(node);
+  }
+
+  ClassMethod(node) {
+    console.log(node)
+    this.recursiveParse(node.key)
+    this.buffer.add("(")
+    if (node.params.length >= 1) {
+      this.recursiveParse(node.params[0])
+      for (let i = 1; i < node.params.length; i++) {
+        this.buffer.add(", ")
+        this.recursiveParse(node.params[i])
+      }
+    }
+    this.buffer.add(")")
+    this.recursiveParse(node.body)
+    this.buffer.newline()
   }
 }

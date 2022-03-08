@@ -19,5 +19,11 @@
   "bugs": {
     "url": "https://github.com/mickey-gs/CSC1028/issues"
   },
-  "homepage": "https://github.com/mickey-gs/CSC1028#readme"
+  "homepage": "https://github.com/mickey-gs/CSC1028#readme",
+  "dependencies": {
+    "acorn-class-fields": "^1.0.0"
+  },
+  "devDependencies": {
+    "@babel/parser": "^7.17.3"
+  }
 }

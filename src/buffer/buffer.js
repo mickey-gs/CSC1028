@@ -19,14 +19,17 @@ export class Buffer {
 
   indent() {
     this.#indent += 1;
+    return this;
   }
 
   dedent() {
     this.#indent -= 1;
+    return this;
   }
 
   replace(remove, str) {
     this.#buffer = this.#buffer.replace(remove, str);
+    return this;
   }
 
   trim() {
@@ -42,6 +45,7 @@ export class Buffer {
     }
     temp = temp.slice(0, i + 1);
     this.#buffer = temp.join("");
+    return this;
   }
 
   deleteLines(lines) {
