@@ -171,7 +171,7 @@ I also managed to show it to my mate doing Software Engineering at Ulster. He sa
 
 I was testing out my npm package by installing it in a test directory. I noticed something concerning, however: npm highlights several 'moderate vulnerabilities' in Semantic. These all seem to be due to a vulnerability existing in prompt-sync, so I'll probably just uninstall it in the Semantic repository and direct users to install it themselves, as it is the only method command line input supported at this time.
 
-### Thursday, 3rd March, 2021
+### Thursday, 3rd March, 2022
 
 Got some really good feedback from John yesterday during the call. He told me that he had never been sure from my diary what stage of the project I was actually at, which briefly induced some panic. However, looking back, I do talk a lot about what I want to do next, and what I've done, but often don't mention the things I *haven't* done, either by being advised not to or just prioritising something else. I have therefore been very specific in the deliverable about exactly what Semantic supports, and have given several examples from the test suite. I've also given several clear goals of what I want to work on next for Semantic. This not only helps with communicating exactly where I'm at in regards to workflow, but adds in to something else John talked about- making sure another student would be glad of the format that the deliverable is in. 
 
