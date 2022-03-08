@@ -182,3 +182,14 @@ I think if I were another student being given this project to work on, I would b
 - I have given an in-depth list of useful resources for development, as well as explaining how my source code works. This should make adding additional source code as easy as possible.
 
 I am now confident that this is a piece of media that would be very useful for another student, as I explain the use, features, goals, and source code for my project in a way that is hopefully not just explanatory, but motivating. My hope is that another student would see this and not only understand how to add to my project, but have the motivation to *want* to add to my project.
+
+### Sunday, 6th March, 2022
+My luck with getting sick seems to be very bad lately- I think I've caught the flu.
+
+### Tuesday, 8th March, 2022
+
+Mostly back on my feet as of today, but I lost a couple of days due to being sick. I was really worried I was going to miss another meeting, which probably wouldn't have been a very good look. Thankfully, however, I've managed to pull through. 
+
+Today, I started implementing support for classes in my transpilers, and have so far implemented instance and class methods. I plan to implement variables and inheritance tomorrow.
+
+I have also decided to make some changes to the tech stack I'm using for the project. Acorn does not support class definitions by default, and getting it to output AST describing a class would require using plugins (which are pretty janky in acorn's case). On the other hand, babel's AST generator supports class definitions natively, and is based on acorn, so I've managed to switch over to that pretty seamlessly.
