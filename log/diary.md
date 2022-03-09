@@ -190,9 +190,11 @@ My luck with getting sick seems to be very bad lately- I think I've caught the f
 
 Mostly back on my feet as of today, but I lost a couple of days due to being sick. I was really worried I was going to miss another meeting, which probably wouldn't have been a very good look. Thankfully, however, I've managed to pull through. 
 
-Today, I started implementing support for classes in my transpilers, and have so far implemented instance and class methods. I plan to implement variables and inheritance tomorrow.
+Today, I started implementing support for classes in my transpilers, and have so far implemented method definitions. I plan to implement variables and inheritance tomorrow.
 
 I have also decided to make some changes to the tech stack I'm using for the project. Acorn does not support class definitions by default, and getting it to output AST describing a class would require using plugins (which are pretty janky in acorn's case). On the other hand, babel's AST generator supports class definitions natively, and is based on acorn, so I've managed to switch over to that pretty seamlessly.
+
+I haven't had as much time as I would like to work on my project at the minute. This is both due to being sick and the coursework due for my other two modules in the next couple of weeks. However, by the end of the month the stress will all be over, which is nice.
 
 ### Wednesday, 9th March, 2022
 
