@@ -193,3 +193,9 @@ Mostly back on my feet as of today, but I lost a couple of days due to being sic
 Today, I started implementing support for classes in my transpilers, and have so far implemented instance and class methods. I plan to implement variables and inheritance tomorrow.
 
 I have also decided to make some changes to the tech stack I'm using for the project. Acorn does not support class definitions by default, and getting it to output AST describing a class would require using plugins (which are pretty janky in acorn's case). On the other hand, babel's AST generator supports class definitions natively, and is based on acorn, so I've managed to switch over to that pretty seamlessly.
+
+### Wednesday, 9th March, 2022
+
+I've been putting some more work into the project before the meeting this morning, specifically on classes. Some features have been easy to implement and work fine, such as constructor functions and inheritance. There have been a few other features that I have not yet implemented because they were unexpectedly difficult. For example, in JavaScript static and non-static methods are invoked the same way, `this.functionName()`, whereas in Ruby they are called differently: `self.functionName()` and `functionName()`. As there is no difference in the AST generated for these two cases, it seems that the only way to correctly generate code is to write code that can recognise if a method called is static or non-static, by scanning the class for its definition. 
+
+Running into a roadblock of this size before I've even got classes fully working has made this morning quite hectic. Additionally, switching over to the other AST generator has introduced a few new bugs into the project. I think that for now, I'll ignore the complicated issues with introducing support for classes, and just get the basics sorted. I'll fix the bugs after that.
