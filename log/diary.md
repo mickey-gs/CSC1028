@@ -201,3 +201,25 @@ I haven't had as much time as I would like to work on my project at the minute. 
 I've been putting some more work into the project before the meeting this morning, specifically on classes. Some features have been easy to implement and work fine, such as constructor functions and inheritance. There have been a few other features that I have not yet implemented because they were unexpectedly difficult. For example, in JavaScript static and non-static methods are invoked the same way, `this.functionName()`, whereas in Ruby they are called differently: `self.functionName()` and `functionName()`. As there is no difference in the AST generated for these two cases, it seems that the only way to correctly generate code is to write code that can recognise if a method called is static or non-static, by scanning the class for its definition. 
 
 Running into a roadblock of this size before I've even got classes fully working has made this morning quite hectic. Additionally, switching over to the other AST generator has introduced a few new bugs into the project. I think that for now, I'll ignore the complicated issues with introducing support for classes, and just get the basics sorted. I'll fix the bugs after that.
+
+### Sunday, 13th March, 2022
+
+Just got my result for deliverable 2- I'm very happy with the mark I received this time. It reflects that I put a lot more work and diligence into following the assessment criteria, which I'm glad about. I spent today organising a plan for what to add to deliverable 2 for my final submission, based on the feedback I've received from John. 
+
+I'm going to add in a section about creating the NPM package, and how it's organised. I'm also going to get someone else to test it on their computer, just to make sure that the instructions aren't too difficult to follow. 
+
+I'm also going to add some more scope to the goals section, just so any users/potential developers get an idea of the more long-term scope of the project, and what I would like to achieve, as well as possible features that could be implemented.
+
+For now, I'm going to keep working on implementing classes, and then fill in the relevant information on the deliverable when I'm finished.
+
+### Tuesday, 15th March, 2022
+
+I've managed to fix the problem with static functions needing to be called with different syntax in Ruby to JavaScript, which required me to take an approach I haven't taken before in the project, which is keeping track of state while converting AST to destination code. Basically, while the transpiler is inside a class definition, I keep track of all the methods defined as static, and insert the appropriate keywords when those methods are called. 
+
+Classes are working in Ruby now (or I at least haven't discovered any bugs yet). I'm going to now start working on implementing them in Python now.
+
+ I haven't managed to spend as much time this week on the project as I normally would; I have web tech coursework due on Friday, so I've been finishing that off. Also, this week was the first time that I've been able to meet up with my group for the group coursework (as I've been sick), so I've had to do a lot of work on that just to catch up.
+
+### Wednesday, 16th March, 2022
+
+Just doing some further work before the meeting, and I've noticed something quite annoying. JavaScript performs type coercion at runtime, and will happily concatenate a String with most other types. Ruby and Python both don't do this automatically, and would throw an error, but so far I've got round that by automatically adding explicit type conversions when generating source code. However, there are situations where I cannot detect if concatenation is going to occur such as when the return values of two functions are added together, as the type of a return value is not fixed in these languages. I will therefore have to stipulate to users of my project that any concatenations have explicit type conversion, as it is not possible to generate correct code in these cases automatically.
