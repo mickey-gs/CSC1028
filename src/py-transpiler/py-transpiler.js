@@ -89,7 +89,7 @@ export class PyTranspiler extends TranspilerSuper {
     }
 
     // Python doesn't have split, but it does have a list constructor
-    code = code.replace(/(\w+).split\(""\)/gmi, (match, arg) => {
+    code = code.replace(/(\w+).split\(("|')("|')\)/gmi, (match, arg) => {
       return 'list(' + arg + ')'
     })
 
