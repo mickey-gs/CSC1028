@@ -223,3 +223,25 @@ Classes are working in Ruby now (or I at least haven't discovered any bugs yet).
 ### Wednesday, 16th March, 2022
 
 Just doing some further work before the meeting, and I've noticed something quite annoying. JavaScript performs type coercion at runtime, and will happily concatenate a String with most other types. Ruby and Python both don't do this automatically, and would throw an error, but so far I've got round that by automatically adding explicit type conversions when generating source code. However, there are situations where I cannot detect if concatenation is going to occur such as when the return values of two functions are added together, as the type of a return value is not fixed in these languages. I will therefore have to stipulate to users of my project that any concatenations have explicit type conversion, as it is not possible to generate correct code in these cases automatically.
+
+Just out of the meeting with John. He recommends not doing any more technical work, but to focus on making sure everything is perfect for the final deliverable (which is essentially a more complete form of the existing deliverables, and a short social media post). This is great news, as I'm really feeling the crunch from my other modules at the minute. I've made a note of what he thinks I should improve on, and I'll work on that over the next week.
+
+### Friday, 18th March, 2022
+
+Was taking a look at the source code today, just to decide what state I should leave it in when I hand in the deliverable. I think that I should actually remove the class support from the last 'official' release of the module, as there are still some existing errors and bugs in the current implementation. Additionally, classes are not supported in Python, and it doesn't seem right to support them in one language but not another. I'll leave the current edition of the source code in the GitHub repository's commit history, as an aid to future developers, but cut back that feature in the final commit before submission.
+
+### Sunday, 20th March, 2022
+
+Spent today editing deliverable 1 and 2 to get them ready for final submission. Deliverable 1 was fine, just some editorial changes. To deliverable 2, I added the details about the npm package (how I made it and how it works), and some more detail about the long-term goals of the project. I've also had to amend the section about the acorn parser to instead being about babel.js's parser, as I've switched over to using that. I should probably add in as well about how the project used to use acorn, list the problems with it and explain why I moved over to babel- talking about the project's problems seems to be a big deal in the assessment criteria.
+
+### Wednesday, 23rd March, 2022
+
+I had a meeting this morning with my mates in Web Tech for our group project. I have managed to get one (maybe two? wasn't sure what her answer was) to try installing and using my project, just to make sure it works. Unfortunately, nobody had their laptop with them except for me, so I'll have to message them this afternoon and ask if they're okay to do some testing.
+
+Work I have to do for the final week: 
+- Go over the diary and make sure I hit the mark on everything.
+- Strip back the source code, and recommit it.
+- Add the finishing touches to deliverable 2.
+- Get my mate to test out the npm package and make sure it works.
+
+This should all be very achievable. Ideally, I would really like to submit the final deliverable before Sunday.
