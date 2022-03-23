@@ -3,6 +3,8 @@ import * as fs from "fs";
 
 export class RubyTranspiler extends TranspilerSuper {
   corrections;
+  staticMethods;
+  addingStrings;
 
   constructor() {
     super();
@@ -12,6 +14,8 @@ export class RubyTranspiler extends TranspilerSuper {
       "!==": "!=",
       "includes": "include?"
     }
+    this.staticMethods = []
+    this.addingStrings = false
   }
 
   parse(node) {
@@ -30,7 +34,7 @@ export class RubyTranspiler extends TranspilerSuper {
 
     // recognise all functions that take functions as parameters, storing which parameter is a function
     let higherOrderFuncs = {}
-    code = code.replace(/def (\w+)\(.+\)\n(.+\n)+/gmi, (def, $1) => {
+    code = code.replace(/def.*?end/gmis, (def, $1) => {
         let funcDeclaration = def.matchAll(/def \w+\((.+)\)/gmi)
         for (const parameterList of funcDeclaration) {
           let params = parameterList[1].matchAll(/([^\s,]+\(.+?\))|([^\s,]+)/gmi)
@@ -74,15 +78,7 @@ export class RubyTranspiler extends TranspilerSuper {
 
     // replace calls to console.log
     code = code.replace(/puts\((.+)\)\n/gmi, (input, $1) => {
-      let args = $1.split(' + ')
-
-      for (let i = 0; i < args.length; i++) {
-        if (args[i][0] != '\'' && args[i][0] != '"') {
-          args[i] = '(' + args[i] + ').to_s'
-        }
-      }
-
-      return 'puts(' + args.join(' + ') + ')\n'
+      return 'puts(' + $1 + ')\n'
     })
 
     // replace calls to prompt
@@ -117,7 +113,58 @@ export class RubyTranspiler extends TranspilerSuper {
       return `(${param1}) ** (${param2})`
     })
 
+    //replace how JS accesses instance variables (this.var) with how Ruby accesses them (@var)
+    code = code.replace(/this\.([^\s\(]+)([\s\)])/gm, (match, variable, ending) => {
+      return `@${variable}${ending}`
+    })
+
+    // removes cases where the "self" keyword has been accidentally duplicated
+    code = code.replace(/self\.self/gmi, "self")
+
+    // in Ruby, calling super() automatically call's the superclass's method of the same name. therefore, all cases of "super.someMethod()" are replaced with "super()"
+    code = code.replace(/super\.\w+\((.*)\)/gmi, (match, params) => {
+      return "super(" + params + ")"
+    })
+
     return code
+  }
+
+  Identifier(node) {
+    if (this.staticMethods.includes(node.name)) {
+      this.buffer.add("self.")
+    }
+    this.buffer.add(node.name);
+  }
+
+  BinaryExpression(node) {
+    if (node.left.type == "BinaryExpression") {
+      this.buffer.add("(");
+      this.recursiveParse(node.left);
+      this.buffer.add(")");
+    }
+    else {
+      this.recursiveParse(node.left);
+    }
+    if (node.operator == "+" && node.right.type == "StringLiteral" && node.left.type != "StringLiteral") {
+      this.buffer.add(".to_s")
+    }
+    
+    this.buffer.add(" ");
+    this.buffer.add(node.operator);
+    this.buffer.add(" ");
+
+    if (node.right.type == "BinaryExpression") {
+      this.buffer.add("(");
+      this.recursiveParse(node.right);
+      this.buffer.add(")");
+    }
+    else {
+      this.recursiveParse(node.right);
+    }
+
+    if (node.operator == "+" && node.left.type == "StringLiteral" && node.right.type != "StringLiteral") {
+      this.buffer.add(".to_s")
+    }
   }
 
   ExpressionStatement(node) {
@@ -202,11 +249,74 @@ export class RubyTranspiler extends TranspilerSuper {
     this.buffer.newline()
   }
 
+  ClassDeclaration(node) {
+    this.staticMethods = []
+    this.buffer.add("class ");
+    this.recursiveParse(node.id);
+    if (node.superClass) {
+      this.buffer.add(" < ")
+      this.recursiveParse(node.superClass)
+    }
+
+    for (let i = 0; i < node.body.body.length; i++) {
+      const elem = node.body.body[i]
+      if (elem.type == "ClassMethod" && elem.static) {
+        this.staticMethods.push(elem.key.name)
+      }
+    }
+    this.recursiveParse(node.body);
+  }
+
   ClassMethod(node) {
     this.buffer.add("def ")
     if (node.static) {
       this.buffer.add("self.")
     }
+
+    if (node.key.name == "constructor") {
+      node.key.name = "initialize"
+    }
+
     super.ClassMethod(node)
+  }
+
+  ClassProperty(node) {
+    if (node.static) {
+      this.buffer.add("@")
+    }
+    this.buffer.add("@")
+    this.recursiveParse(node.key)
+    this.buffer.newline()
+  }
+
+  NewExpression(node) {
+    this.recursiveParse(node.callee)
+    this.buffer.add(".new(")
+    if (node.arguments.length >= 1) {
+      this.recursiveParse(node.arguments[0])
+      for (let i = 1; i < node.arguments.length; i++) {
+        this.buffer.add(", ")
+        this.recursiveParse(node.arguments[i])
+      }
+    }
+    this.buffer.add(")")
+  }
+
+  CallExpression(node) {
+    if (node.callee.type == "MemberExpression" && node.callee.object.type == "ThisExpression") {
+      this.recursiveParse(node.callee.property)
+    }
+    else {
+      this.recursiveParse(node.callee);
+    }
+    this.buffer.add("(");
+    if (node.arguments.length > 0) {
+      this.recursiveParse(node.arguments[0]);
+      for (let i = 1; i != node.arguments.length; i++) {
+        this.buffer.add(", ");
+        this.recursiveParse(node.arguments[i])
+      }
+    }
+    this.buffer.add(")");
   }
 }

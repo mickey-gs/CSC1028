@@ -20,6 +20,10 @@ export class TranspilerSuper {
     return this.buffer.get();
   }
 
+  ExportNamedDeclaration(node) {
+    this.recursiveParse(node.declaration)
+  }
+
   File(node) {
     this.recursiveParse(node.program);
   }
@@ -32,6 +36,10 @@ export class TranspilerSuper {
 
   StringLiteral(node) {
     this.buffer.add(node.extra.raw)
+  }
+
+  NumericLiteral(node) {
+    this.buffer.add(node.extra.rawValue)
   }
 
   ExpressionStatement(node) {
@@ -252,6 +260,17 @@ export class TranspilerSuper {
     this.buffer.add("]");
   }
 
+  ObjectExpression(node) {
+    for (let i = 0; i < node.properties.length; i++) {
+      this.recursiveParse(node.properties[i])
+    }
+  }
+
+  ObjectProperty(node) {
+    this.recursiveParse(node.key)
+    this.recursiveParse(node.value)
+  }
+
   ClassDeclaration(node) {
     this.buffer.add("class ");
     this.recursiveParse(node.id);
@@ -263,7 +282,6 @@ export class TranspilerSuper {
   }
 
   ClassMethod(node) {
-    console.log(node)
     this.recursiveParse(node.key)
     this.buffer.add("(")
     if (node.params.length >= 1) {
@@ -276,5 +294,28 @@ export class TranspilerSuper {
     this.buffer.add(")")
     this.recursiveParse(node.body)
     this.buffer.newline()
+  }
+
+  ClassProperty(node) {
+    if (node.static) {
+      this.buffer.add("static ")
+    }
+    this.recursiveParse(node.key)
+  }
+
+  ThisExpression(node) {
+    this.buffer.add("this")
+  }
+
+  Super(node) {
+    this.buffer.add("super")
+  }
+
+  NewExpression(node) {
+    this.buffer.add("new ")
+    this.recursiveParse(node.callee)
+    for (let i = 0; i < node.arguments.length; i++) {
+      this.recursiveParse(node.arguments[i])
+    }
   }
 }
