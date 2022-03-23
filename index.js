@@ -1,4 +1,3 @@
-import { JSTranspiler } from "./src/js-transpiler/js-transpiler.js";
 import { PyTranspiler } from "./src/py-transpiler/py-transpiler.js";
 import { RubyTranspiler } from "./src/ruby-transpiler/ruby-transpiler.js";
 import * as babel from "@babel/parser";
