@@ -26,6 +26,7 @@ else if (choice == 8) {
 else {
     contents = fs.readFileSync(`./tests/${options[choice - 1]}.js`)
 }
+contents = contents.toString()
 console.log("\n************************************")
 console.log("Original script:\n" + contents)
 console.log("\n************************************")
