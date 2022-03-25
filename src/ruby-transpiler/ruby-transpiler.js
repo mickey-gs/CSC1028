@@ -1,11 +1,18 @@
 import { TranspilerSuper } from "../transpiler-super/transpiler-super.js";
-import * as fs from "fs";
+
+/*
+
+This class is the transpiler that targets Ruby. Its role is to translate an AST into correct Ruby source code. For a general overview of the theory behind this transpiler's design, see the top comment on the superclass at src/transpiler-super/transpiler-super.js
+
+*/
 
 export class RubyTranspiler extends TranspilerSuper {
   corrections;
 
   constructor() {
     super();
+
+    // keywords that do not exist in Ruby, and their correct Ruby equivalents. Used in the correct() method
     this.corrections = {
       "else if": "elsif",
       "console.log": "puts",
@@ -19,6 +26,7 @@ export class RubyTranspiler extends TranspilerSuper {
     return this.correct(code)
   }
 
+  // While the source code generated has correct Ruby syntax, there are still some potential areas where the code will not be correct. For example, a call to a function that only exists in the node.js API, such as 'console.log(foo)'. The purpose of this method is to replace all such instances of incorrect code with the correct Ruby equivalent using regular expressions. Each replacement has an explanation of what it is targeting above it.
   correct(code) {
     for (const key of Object.keys(this.corrections)) {
       code = code.replace(new RegExp(key, 'gmi'), this.corrections[key]);

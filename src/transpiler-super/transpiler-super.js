@@ -1,5 +1,19 @@
 import { Buffer } from "../buffer/buffer.js"
 
+/*
+
+This class is the super class for all other transpiler classes (hence the name). The majority of methods do get overridden by the specialised transpilers, but this class serves a valuable purpose by
+1) Serving as a blueprint for the rapid development of other transpilers
+2) Allowing for a generalised, 'first pass' at adding support for additional types of AST node, which makes generating language-specific code in the other transpilers easier. This is as opposed to adding support for a node for one language's transpiler, and then struggling to adapt that specific solution to work with other languages.
+
+All methods have the same name as the type of AST node they are written to translate into source code.
+
+As the AST is a tree structure, it can be effectively traversed and translated to source code by recursive examination. The method central to this is recursiveParse(node), which is called by many of the other methods. This method in turn calls the appropriate method for the node currently being looked at by checking the node's type.
+
+A key feature of JS that is exploited for this approach is the ability to call a method from the value of a variable. This allows a node to be translated to code by calling a method of the same name as the node's type. It is for this reason that all the methods of the transpiler classes have the same name as the type of node they target.
+
+*/
+
 export class TranspilerSuper {
   buffer;
 
@@ -34,6 +48,7 @@ export class TranspilerSuper {
     this.recursiveParse(node.expression);
   }
 
+  // not supported at this time, so replaced with a token that will be deleted later
   ImportDeclaration(node) {
     this.buffer.add('@DELETE@\n')
   }

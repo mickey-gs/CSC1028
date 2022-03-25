@@ -1,12 +1,18 @@
 import { TranspilerSuper } from "../transpiler-super/transpiler-super.js"
-import * as fs from "fs"
-import { match } from "assert";
+
+/*
+
+This class is the transpiler that targets Python. Its role is to translate an AST into correct Python source code. For a general overview of the theory behind this transpiler's design, see the top comment on the superclass at src/transpiler-super/transpiler-super.js
+
+*/
 
 export class PyTranspiler extends TranspilerSuper {
   corrections;
   
   constructor() {
     super();
+
+    // keywords that do not exist in Python, and their correct Python equivalents. Used in the correct() method
     this.corrections = {
       "true": "True",
       "false": "False",
@@ -35,7 +41,9 @@ export class PyTranspiler extends TranspilerSuper {
     return this.buffer.get();
   }
 
+  // While the source code generated has correct Python syntax, there are still some potential areas where the code will not be correct. For example, a call to a function that only exists in the node.js API, such as 'console.log(foo)'. The purpose of this method is to replace all such instances of incorrect code with the correct Python equivalent using regular expressions. Each replacement has an explanation of what it is targeting above it.
   correct(code) {
+    // simple substitution of keywords and keyphrases with their Python equivalents
     for (let key of Object.keys(this.corrections)) {
       code = code.replaceAll(key, this.corrections[key]);
     }
