@@ -218,7 +218,7 @@ I've managed to fix the problem with static functions needing to be called with 
 
 Classes are working in Ruby now (or I at least haven't discovered any bugs yet). I'm going to now start working on implementing them in Python now.
 
- I haven't managed to spend as much time this week on the project as I normally would; I have web tech coursework due on Friday, so I've been finishing that off. Also, this week was the first time that I've been able to meet up with my group for the group coursework (as I've been sick), so I've had to do a lot of work on that just to catch up.
+I haven't managed to spend as much time this week on the project as I normally would; I have web tech coursework due on Friday, so I've been finishing that off. Also, this week was the first time that I've been able to meet up with my group for the group coursework (as I've been sick), so I've had to do a lot of work on that just to catch up.
 
 ### Wednesday, 16th March, 2022
 
@@ -245,3 +245,11 @@ Work I have to do for the final week:
 - Get my mate to test out the npm package and make sure it works.
 
 This should all be very achievable. Ideally, I would really like to submit the final deliverable before Sunday.
+
+Just got out of the meeting- John seems happy with the current state of affairs as well.
+
+Spent the afternoon fixing the source code, so that's all up to date and sorted. Reverted it back to how it was before classes were added, along with completing the transition over to babel.
+
+### Friday, 25th March, 2021
+
+The first thing I did today was make sure that the source code is really well commented. I want to make sure that anyone who wants to contribute additional code is able to get started as quickly as possible- not just because of the assessment criteria, but because I have experience in trying to use poorly documented libraries, which can be incredibly frustrating. A big part of this is trying to reduce the time it takes to get up to speed. This is a period of looking at a code base and just trying to make sense of the purpose of the discrete sections of code before being able to actually contribute anything. Comments are a great way to shorten this period, as it takes the contributor less time to understand the functionality of the code they're looking at.

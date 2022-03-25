@@ -200,7 +200,7 @@ const prompt = PromptSync()</pre>
                 The eventual goal of this project is to make the porting of libraries to other languages a more streamlined and automated process, eliminating the need for developers to commit to a certain language for development solely based on the libraries available in it.
             </p>
             <p>
-                There are several features that would have to be added to the project for this to become a viable use case. Many popular libraries take an object-oriented approach to development, such as three.js, and acorn.js (which is used in this project). For this project to be able to port these libraries, it would have to support generating class structures in other languages, so this is a major goal for the future. 
+                There are several features that would have to be added to the project for this to become a viable use case. Many popular libraries take an object-oriented approach to development, such as three.js, and acorn.js (another popular AST parser for JavaScript). For this project to be able to port these libraries, it would have to support generating class structures in other languages, so this is a major goal for the future. 
             </p>
             <p>
                 Another very common feature is importing code from other files- however, this is implemented in a very different manner across different languages (C++'s header files, Java imports, JavaScript imports). The goal regarding this would therefore primarily be investigating whether it is even possible to automatically generate import statements in a target language.
@@ -803,11 +803,16 @@ hangMan()</pre>
 
             <h2>References</h2>
             <p>
-                This project is made possible by <a href="https://github.com/acornjs/acorn" target="_blank">acorn.js</a>, a project that allows for the conversion of JavaScript code into an abstract syntax tree (AST). An abstract syntax tree is a representation of a given program that is not associated with any specific programming language, consisting of a tree structure of nodes. Each node describes some stage of the program's execution, and may have its own children nodes. This structure is very well suited to describing program execution, as it can easily describe the functionality of recursive elements, such as nested loops and conditional statements. Below, an example AST (sourced from this Wikipedia article) can be seen for Euclid's algorithm, which is used to calculate the greatest common divisor of two integers.
-            </p> 
+                This project is made possible by <a href="https://github.com/acornjs/acorn" target="_blank">@babel/parser</a>, a tool that allows for the conversion of JavaScript code into an abstract syntax tree (AST). An abstract syntax tree is a representation of a given program that is not associated with any specific programming language, consisting of a tree structure of nodes. Each node describes some stage of the program's execution, and may have its own children nodes. This structure is very well suited to describing program execution, as it can easily describe the functionality of recursive elements, such as nested loops and conditional statements. Below, an example AST (sourced from this Wikipedia article) can be seen for Euclid's algorithm, which is used to calculate the greatest common divisor of two integers.
+            </p>
+
             <img src="images/ast.png" alt="An image depicting an abstract syntax tree." style="width: 40%;">
             <p>
-                ASTs make up a key part of the project's internal workflow, as incoming JS code is first converted into AST form by acorn, and then to the target programming language by my own code.
+                ASTs make up a key part of the project's internal workflow, as incoming JS code is first converted into AST form by babel's parser, and then to the target programming language by my own code.
+            </p>
+
+            <p>
+              The babel parsing tool is a part of the greater <a href="https://babeljs.io/" target="_blank">babel.js</a> project, which allows for the translation of JavaScript written using newer language to older versions of JavaScript. It is typically used by developers who want to exploit the features of modern JavaScript but are mindful of possible compatibility issues.
             </p>
             
             <h2>Contributing to Development</h2>
