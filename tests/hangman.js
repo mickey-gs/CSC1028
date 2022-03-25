@@ -1,3 +1,5 @@
+// A longer test case that covers a minimal but fully functional application- a small hangman game.
+
 import PromptSync from 'prompt-sync'
 const prompt = PromptSync()
 

@@ -1,4 +1,4 @@
-// These test cases cover loops, recursion and arrays
+// These test cases cover loops, recursion and arrays.
 
 function mean(array) {
     let i = 0

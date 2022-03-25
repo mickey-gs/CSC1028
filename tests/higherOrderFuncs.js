@@ -1,3 +1,5 @@
+// This test case covers higher order functions, which are supported in all languages supported by this project at this time.
+
 function calculator(a, b, func) {
     return func(a, b)
 }
