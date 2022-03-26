@@ -16,6 +16,8 @@ do {
     choice = prompt("Which test would you like to run? ") - 0
     valid = (typeof choice === "number") && (Math.floor(choice) == choice) && choice >= 1 && choice <= options.length
 } while (!valid)
+
+// Most of the test cases have the same name as the option supplied to the user. For the ones that don't, the file to be read from is explicitly defined.
 let contents = ""
 if (choice === 6) {
     contents = fs.readFileSync("./tests/higherOrderFuncs.js")

@@ -826,6 +826,12 @@ hangMan()</pre>
                 There are several key resources a developer should be familiar with to contribute to this project. One is the <a href="https://web.archive.org/web/20210314002546/https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API" target="_blank">ESTree specification for ASTs</a>, as this is the format that the initial JS code is converted in to. Some small modifications are made to this specification by the team at @babel/parser, so it's worth checking out <a href="https://babeljs.io/docs/en/babel-parser/" target="_blank">their official documentation</a> as well. Personally, the easiest way I found to learn more about the spec was to write an example program, have it parsed into an AST, and then traverse the tree produced, printing each node's properties to the console. Another important source will be the <a href="https://nodejs.org/en/docs/" target="_blank"></a>official NodeJS documentation, especially what features of the <a href="https://nodejs.org/en/docs/es6/" target="_blank">JS ECMA specification it supports</a>, in order to understand the functionality and specification of the input code and accurately convert it into the output. Additionally, the documentation of the target language will be a key resource. So far, this has meant consulting the brilliant <a href="https://ruby-doc.org/" target="_blank">Ruby</a> and <a href="https://docs.python.org/3/" target="_blank">Python</a> docs, which are great as references for understanding the target language, and duplicating the input code's functionality in the output.    
             </p>
             <p>
+              In my experience, the best approach to development on this project so far has been a <a href="https://www.agilest.org/devops/test-driven-development/" target="_blank">test-driven</a> one. This is because it allows the specification of the next stage of the project to be created before any actual programming work is done. On a project like this, with such a wide scope, it has been of great benefit to constrain the next stage of development to a specific goal, and then write code in order to reach that goal.
+            </p>
+            <p>
+              In practice, this entails creating a new test case in the <span class="inlineCode">tests/</span> directory that showcases the features to be worked on next, adjusting <span class="inlineCode">test.js</span>, writing code, and running <span class="inlineCode">npm test</span> to observe the transpiler's output. When the code that has been written for that test case produces valid code in the target language, it's also important to make sure that all of the previous test cases still produce valid code, and that the new developments haven't broken previous code.
+            </p>
+            <p>
                 Below, I will explain my own code, as guidance for any interested developers that would like to contribute.
             </p>
 
@@ -928,13 +934,7 @@ code = code.replace(/fs\.writeFileSync\((.+),\s(.+)\)/gmi, (match, file, content
 
             <h3>The Code</h3>
             <p>
-              The full source code can be found at <a href="https://github.com/mickey-gs/semantic/tree/main/src" target="_blank">this project's Github repository</a>. Each transpiler has its own folder within the larger <span class="inlineCode">src</span> folder. For a new contributor, I would suggest either working on implementing class funcionality in the existing transpilers, or on building a transpiler for C++ from the existing source code, using the other transpilers as reference.
-            </p>
-            <p>
-              In my experience so far, the best approach to development on this project has been a <a href="https://www.agilest.org/devops/test-driven-development/" target="_blank">test-driven</a> one. This is because it allows the specification of the next stage of the project to be created before any actual programming work is done. On a project like this, with such a wide scope, it has been of great benefit to constrain the next stage of development to a specific goal, and then write code in order to reach that goal.
-            </p>
-            <p>
-              In practice, this entails creating a new test case in the <span class="inlineCode">tests/</span> directory that showcases the features to be worked on next, adjusting <span class="inlineCode">test.js</span>, writing code, and running <span class="inlineCode">node test.js</span> to observe the transpiler's output.
+              The full source code can be found at <a href="https://github.com/mickey-gs/semantic/tree/main/src" target="_blank">this project's Github repository</a>. Each transpiler has its own folder within the larger <span class="inlineCode">src</span> folder. For a new contributor, I would suggest either working on implementing class funcionality in the existing transpilers, on building a transpiler for C++ from the existing source code (using the other transpilers as reference), or taking a look at the existing issues, listed at the bottom.
             </p>
 
             <h3>The npm Package</h3>
