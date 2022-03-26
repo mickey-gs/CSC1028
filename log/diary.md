@@ -228,7 +228,7 @@ Just out of the meeting with John. He recommends not doing any more technical wo
 
 ### Friday, 18th March, 2022
 
-Was taking a look at the source code today, just to decide what state I should leave it in when I hand in the deliverable. I think that I should actually remove the class support from the last 'official' release of the module, as there are still some existing errors and bugs in the current implementation. Additionally, classes are not supported in Python, and it doesn't seem right to support them in one language but not another. I'll leave the current edition of the source code in the GitHub repository's commit history, as an aid to future developers, but cut back that feature in the final commit before submission.
+Was taking a look at the source code today, just to decide what state I should leave it in when I hand in the deliverable. I think that I should actually remove the class support from the last 'official' release of the module, as there are still some existing errors and bugs in the current implementation. Additionally, classes are not supported in Python, and it doesn't seem right to support them in one language but not another. Also, I imagine it would be quite difficult for a future contributor to add to the project if I leave half-finished features in the source code. Still, I'll leave the current edition of the source code in the GitHub repository's commit history, as it could be used as a guide to implement class features in a much more rapid manner than working with no prior material.
 
 ### Sunday, 20th March, 2022
 
@@ -246,10 +246,45 @@ Work I have to do for the final week:
 
 This should all be very achievable. Ideally, I would really like to submit the final deliverable before Sunday.
 
-Just got out of the meeting- John seems happy with the current state of affairs as well.
+Just got out of the meeting- John seems happy with the current state of affairs as well. Something he has put some emphasis on over the course of the meetings is that I should provide potential users/contributors some concrete examples of how my project can provide value. I think I've done a good job in this area with regards to porting libraries and source code, which I've even backed up with some specific examples. An area he thinks I should discuss in the deliverable is the development of mobile applications/web applications. I agree that writing code designed for one platform that can be automatically converted to work on another sounds like a great idea, but I honestly don't have enough experience in either of these areas discuss to my project's utility in them in any valuable way. It is for this reason that I have stuck to an area I have plenty of experience in (libraries), with several examples to illustrate my point. 
 
 Spent the afternoon fixing the source code, so that's all up to date and sorted. Reverted it back to how it was before classes were added, along with completing the transition over to babel.
 
 ### Friday, 25th March, 2021
 
 The first thing I did today was make sure that the source code is really well commented. I want to make sure that anyone who wants to contribute additional code is able to get started as quickly as possible- not just because of the assessment criteria, but because I have experience in trying to use poorly documented libraries, which can be incredibly frustrating. A big part of this is trying to reduce the time it takes to get up to speed. This is a period of looking at a code base and just trying to make sense of the purpose of the discrete sections of code before being able to actually contribute anything. Comments are a great way to shorten this period, as it takes the contributor less time to understand the functionality of the code they're looking at.
+
+I also got my mate to try out the npm package. She seemed impressed with what my project does, which was quite nice, and also provided some good feedback. She thought that the library itself seemed easy enough to use, as it only requires calling functions, but that the testing interface wasn't so straightforward, as the user has to clone my Github repository. I would agree with what she said, but it's unfortunately a bit too late in development to adjust how the test script works. Additionally, I'm not too sure how to include code in an npm package that isn't part of the package's API, so this is something I would have to research. If I continue to work on the project after handing it in for submission (which I'm considering, as I'll likely want something to work on between uni ending and my placement starting), this will definitely be something I look at. 
+
+At the moment, however, I would not think that how the test cases are accessed is likely to impede the progress of a new contributor. As ease of use is the most important point of the final deliverable, I would prefer to maintain an inelegant solution that works well than to rush a new implementation that might not. I have provided an explanation in the blog post of how the testing for this project works, and how they can expand upon it to benefit their own development process. This also provides the 'testing plan' John mentions in the criteria for final submission.
+
+I published the latest version of the npm package today as well.
+
+### Saturday, 26th March, 2022
+
+Today, I took a look at social media to see where I should post about my project and how I should format it. Thankfully, John has said we don't have to *actually* submit this post, just make an outline of it. This is good, because while I do believe this project can eventually provide great value to a lot of people, it is somewhat lacklustre in its current state, and I would prefer to advertise it when it's more complete. I decided to make a social media post for my blog post/project in general as I think it's much more interesting and beneficial to the average developer than my how to guide.
+
+I had planned to create a post targetting a specific subreddit, but have ran into an issue: every subreddit I had considered as a candidate do not, as a rule, like text posts.
+
+On r/programming, a subreddit I frequently visit myself, the posts about personal projects that make it to the top posts of the month (used as a gauge for how to write my post) are all link posts:
+- [Ever wanted to write Discord bots in C? Probably not, but here is a library for it anyway - introducing Concord!](https://github.com/Cogmasters/concord) (1.8k upvotes)
+- [A cross-platform minigolf game I wrote in C.](https://github.com/mgerdes/Open-Golf) (1.5k)
+- [GitHub - ZeroIntensity/pointers.py: Bringing the hell of pointers to Python.](https://github.com/ZeroIntensity/pointers.py) (1.3k)
+
+These are very illustrative of what sort of post I should create for this subreddit: a catchy title that captures my project's name, goal, possibly the language it's written in, and a link to my Github repo. Unfortunately, however, I have to write a text post, not just come up with a title- and r/programming only accepts link posts anyway. Nevertheless, this is very helpful with coming up with a title for my post.
+
+r/javascript, a subreddit I am less familiar with, seems to share a similar userbase and has similar results for the most successful posts of the month:
+- [Postgres.js – Fastest Full-Featured PostgreSQL Client for Node and Deno](https://github.com/porsager/postgres) (379 upvotes- not as much as r/programming, but this is the second highest rated post of the month at the time of writing)
+- [Introducing Ladle, a drop-in alternative to Storybook for React components. Based on Vite , instant server start, 4x faster production build, 20x smaller footprint, code-splitting, fast refresh, single dependency & command and no configuration required.](https://www.ladle.dev/blog/introducing-ladle/)
+
+They also accept text posts, some of which get a fair amount of traction:
+- [(AskJS) Why is is prettier used if eslint can format?](https://www.reddit.com/r/javascript/comments/tc3ecw/askjs_why_is_is_prettier_used_if_eslint_can_format/)
+- [(AskJS) Why not just add 'application/typescript' support for browsers.](https://www.reddit.com/r/javascript/comments/tj05o1/askjs_why_not_just_add_applicationtypescript/)
+
+I have therefore decided to post to the r/javascript subreddit, as it mirrors a subreddit I am familiar with the community of, while allowing text posts. Also, my project is in JavaScript, meaning that this subreddit is the ideal audience of readers who are guaranteed to be able to contribute (even though they may not want to).
+
+Both of these posts attempt to persuade the reader of something. The first merely illustrates an issue; the second presents a solution. From these posts, it is clear that in order to create a post that captures attention, I should specify the problem I am trying to solve first, and then my solution. I should do this in simple terms, as I haven't seen any salesman-like pitches in the top posts of either subreddit, just posts that clearly show off their work and allow the reader to judge its value. The problem I present should also be of relative importance: the first questions toolchain use, and the second is about a current hot topic in JavaScript development. Both of these are issues the community would care about, and show I should try to present the problem I'm solving as something the community should care about.
+
+Another good reason to be straightforward and concise is that posts that have unclear topics/motivation do not do as well. [This post](https://www.reddit.com/r/javascript/comments/tk9nnp/askjs_with_growing_complexity_today_inside_the_js/) also attempts to spark discussion, but does not gain much traction. I believe this is due to its unclear subject, and the poster's failure to provide much valuable input of their own.
+
+Just finished writing the post there. I introduced the project by name, specified a problem (libraries only being available in certain languages), gave an example (Flask only being accessible in Python), stated how my project solves that problem, and how this benefits developers. I made sure to mention that the project is still in its infancy, and doesn't provide that functionality yet. I also provided a link to my Github page, for those who would like to track its progress or contribute to development (John asked us to link to the blog post/how to guide, but the Github repo's README file quickly points to my blog post as a complete guide to the project).

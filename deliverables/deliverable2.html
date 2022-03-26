@@ -200,7 +200,10 @@ const prompt = PromptSync()</pre>
                 The eventual goal of this project is to make the porting of libraries to other languages a more streamlined and automated process, eliminating the need for developers to commit to a certain language for development solely based on the libraries available in it.
             </p>
             <p>
-                There are several features that would have to be added to the project for this to become a viable use case. Many popular libraries take an object-oriented approach to development, such as three.js, and acorn.js (another popular AST parser for JavaScript). For this project to be able to port these libraries, it would have to support generating class structures in other languages, so this is a major goal for the future. 
+                The first true milestone of this project after what has been achieved already would be to convert an existing library written in Node.js to another language. This would both demonstrate the massive potential value this project offers to developers, and reflect a significant checkpoint in terms of implementing support for the set of language features used by 'real' projects (that is, projects of value with real life use cases).
+            </p>
+            <p>
+                There are several features that would have to be added to the project for this to become a viable use case. Many popular libraries take an object-oriented approach to development, such as three.js, and <a href="https://github.com/acornjs/acorn" target="_blank">acorn.js</a> (another popular AST parser for JavaScript). For this project to be able to port these libraries, it would have to support generating class structures in other languages, so this is a major goal for the future. 
             </p>
             <p>
                 Another very common feature is importing code from other files- however, this is implemented in a very different manner across different languages (C++'s header files, Java imports, JavaScript imports). The goal regarding this would therefore primarily be investigating whether it is even possible to automatically generate import statements in a target language.
@@ -325,7 +328,7 @@ print(str(isEven(4)))</pre>
                 The test below shows Semantic's ability to accurately transpile loops, combined with conditions and function definitions. I have written these in the style I advocate for in my guide to writing language-agnostic code.
             </p>
             <pre class="codeSnippet">
-                npm test
+npm test
 
 > @mickey-gs/semantic@1.2.1 test
 > node test.js
@@ -440,7 +443,7 @@ print("10 factorial: " + str(factorial(10)))</pre>
                 Higher order functions are a common and easy-to-use method of implementing run-time polymorphism in a program. Semantic is able to recognise when they are used, and correct Ruby code to use the syntax for them to work.
             </p>
             <pre class="codeSnippet">
-                npm test
+npm test
 
 > @mickey-gs/semantic@1.2.1 test
 > node test.js
@@ -509,7 +512,7 @@ print(str(calculator(multiply(2, 5), 5, multiply)))</pre>
                 File I/O systems can vary widely in terms of API in different languages. The example below shows some common operations that can be converted to using the correct calls for other languages.
             </p>
             <pre class="codeSnippet">
-                npm test
+npm test
 
 > @mickey-gs/semantic@1.2.1 test
 > node test.js
@@ -803,7 +806,7 @@ hangMan()</pre>
 
             <h2>References</h2>
             <p>
-                This project is made possible by <a href="https://github.com/acornjs/acorn" target="_blank">@babel/parser</a>, a tool that allows for the conversion of JavaScript code into an abstract syntax tree (AST). An abstract syntax tree is a representation of a given program that is not associated with any specific programming language, consisting of a tree structure of nodes. Each node describes some stage of the program's execution, and may have its own children nodes. This structure is very well suited to describing program execution, as it can easily describe the functionality of recursive elements, such as nested loops and conditional statements. Below, an example AST (sourced from this Wikipedia article) can be seen for Euclid's algorithm, which is used to calculate the greatest common divisor of two integers.
+                This project is made possible by <a href="https://babeljs.io/docs/en/babel-parser/" target="_blank">@babel/parser</a>, a tool that allows for the conversion of JavaScript code into an abstract syntax tree (AST). An abstract syntax tree is a representation of a given program that is not associated with any specific programming language, consisting of a tree structure of nodes. Each node describes some stage of the program's execution, and may have its own children nodes. This structure is very well suited to describing program execution, as it can easily describe the functionality of recursive elements, such as nested loops and conditional statements. Below, an example AST (sourced from <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree" target="_blank">this Wikipedia article</a>) can be seen for Euclid's algorithm, which is used to calculate the greatest common divisor of two integers.
             </p>
 
             <img src="images/ast.png" alt="An image depicting an abstract syntax tree." style="width: 40%;">
@@ -814,10 +817,13 @@ hangMan()</pre>
             <p>
               The babel parsing tool is a part of the greater <a href="https://babeljs.io/" target="_blank">babel.js</a> project, which allows for the translation of JavaScript written using newer language to older versions of JavaScript. It is typically used by developers who want to exploit the features of modern JavaScript but are mindful of possible compatibility issues.
             </p>
+            <p>
+              Previous versions of this project used the parser provided by the <a href="https://github.com/acornjs/acorn" target="_blank">acorn.js</a> project. When I began work on supporting classes, I found that acorn did not natively support parsing them. To get acorn to work with classes, I would have to use its plugin system, and use code somebody else had written to bridge the gap. For want of a better word, I found this solution quite <a href="https://dictionary.cambridge.org/dictionary/english/janky" target="_blank">'janky'</a>. After some searching, I found @babel/parser, which not only supported parsing classes natively, but also provided support for many new and experimental JavaScript features. I decided that migrating to babel not only provided immediate benefit to myself, but would also be of great value to any potential contributors in future who may wish to work on supporting features of modern or experimental JavaScript. In addition, @babel/parser is built on top of acorn.js, and to a similar specification, which made migration a fairly painless and straightforward process. 
+            </p>
             
             <h2>Contributing to Development</h2>
             <p>
-                There are several key resources a developer should be familiar with to contribute to this project. One is the <a href="https://web.archive.org/web/20210314002546/https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API" target="_blank">ESTree specification for ASTs</a>, as this is the format that the initial JS code is converted in to. Personally, the easiest way I found to learn more about the spec was to write an example program, have acorn parse it, and then traverse the tree produced, printing each node's properties to the console. Another important source will be the <a href="https://nodejs.org/en/docs/" target="_blank"></a>official NodeJS documentation, especially what features of the <a href="https://nodejs.org/en/docs/es6/" target="_blank">JS ECMA specification it supports</a>, in order to understand the functionality and specification of the input code and accurately convert it into the output. Additionally, the documentation of the target language will be a key resource. So far, this has meant consulting the brilliant <a href="https://ruby-doc.org/" target="_blank">Ruby</a> and <a href="https://docs.python.org/3/" target="_blank">Python</a> docs, which are great as references for understanding the target language, and duplicating the input code's functionality in the output.    
+                There are several key resources a developer should be familiar with to contribute to this project. One is the <a href="https://web.archive.org/web/20210314002546/https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API" target="_blank">ESTree specification for ASTs</a>, as this is the format that the initial JS code is converted in to. Some small modifications are made to this specification by the team at @babel/parser, so it's worth checking out <a href="https://babeljs.io/docs/en/babel-parser/" target="_blank">their official documentation</a> as well. Personally, the easiest way I found to learn more about the spec was to write an example program, have it parsed into an AST, and then traverse the tree produced, printing each node's properties to the console. Another important source will be the <a href="https://nodejs.org/en/docs/" target="_blank"></a>official NodeJS documentation, especially what features of the <a href="https://nodejs.org/en/docs/es6/" target="_blank">JS ECMA specification it supports</a>, in order to understand the functionality and specification of the input code and accurately convert it into the output. Additionally, the documentation of the target language will be a key resource. So far, this has meant consulting the brilliant <a href="https://ruby-doc.org/" target="_blank">Ruby</a> and <a href="https://docs.python.org/3/" target="_blank">Python</a> docs, which are great as references for understanding the target language, and duplicating the input code's functionality in the output.    
             </p>
             <p>
                 Below, I will explain my own code, as guidance for any interested developers that would like to contribute.
@@ -834,16 +840,16 @@ hangMan()</pre>
             </p>
             <pre class="codeSnippet">
 import { PyTranspiler } from "./src/py-transpiler/py-transpiler.js";
-import * as acorn from "acorn";
+import * as babel from "@babel/parser"
 
 export function toPython(code) {
-    let ast = acorn.parse(code, {ecmaVersion: 'latest', sourceType: 'module'})
-    const transpiler = new PyTranspiler
-    
-    return transpiler.parse(ast)
+  let ast = babel.parse(code, {ecmaVersion: 'latest', sourceType: 'module'})
+  const transpiler = new PyTranspiler
+
+  return transpiler.parse(ast)
 }</pre>
             <p>
-                The code for the Python transpiler and acorn parser are imported. The function exported takes JS code as its argument, uses acorn to parse it and create the AST, and returns the transpiler's conversion of the AST to Python. The <span class="inlineCode">parse(code)</span> method, used as an interface with the library, has the following structure:
+                The code for the Python transpiler and AST parser are imported. The function exported takes JS code as its argument, uses @babel/parser to parse it and create the AST, and returns the transpiler's conversion of the AST to Python. The <span class="inlineCode">parse(code)</span> method, used as an interface with the library, has the following structure:
             </p>
             <pre class="codeSnippet">
 parse(node) {
@@ -857,7 +863,7 @@ parse(node) {
 
             <h3>Converting to AST</h3>
             <p>
-                This is the first stage of the libraries internal workflow. The acorn.js package is used to convert the code to an AST object, following the ESTree standard mentioned above. To become familiar with the AST's structure, I found it most useful to recursively examine the node's properties, and the properties of its children.
+                This is the first stage of the libraries internal workflow. The @babel/parser package is used to convert the code to an AST object, following the ESTree standard mentioned above. To become familiar with the AST's structure, I found it most useful to recursively examine the node's properties, and the properties of its children.
             </p>
 
             <h3>The Transpiler</h3>
@@ -922,14 +928,31 @@ code = code.replace(/fs\.writeFileSync\((.+),\s(.+)\)/gmi, (match, file, content
 
             <h3>The Code</h3>
             <p>
-                The full source code can be found at <a href="https://github.com/mickey-gs/semantic/tree/main/src" target="_blank">this project's Github repository</a>. Each transpiler has its own folder within the larger <span class="inlineCode">src</span> folder. For a new contributor, I would suggest either working on implementing class funcionality in the existing transpilers, or on building a transpiler for C++ from the existing source code, using the other transpilers as reference.
+              The full source code can be found at <a href="https://github.com/mickey-gs/semantic/tree/main/src" target="_blank">this project's Github repository</a>. Each transpiler has its own folder within the larger <span class="inlineCode">src</span> folder. For a new contributor, I would suggest either working on implementing class funcionality in the existing transpilers, or on building a transpiler for C++ from the existing source code, using the other transpilers as reference.
+            </p>
+            <p>
+              In my experience so far, the best approach to development on this project has been a <a href="https://www.agilest.org/devops/test-driven-development/" target="_blank">test-driven</a> one. This is because it allows the specification of the next stage of the project to be created before any actual programming work is done. On a project like this, with such a wide scope, it has been of great benefit to constrain the next stage of development to a specific goal, and then write code in order to reach that goal.
+            </p>
+            <p>
+              In practice, this entails creating a new test case in the <span class="inlineCode">tests/</span> directory that showcases the features to be worked on next, adjusting <span class="inlineCode">test.js</span>, writing code, and running <span class="inlineCode">node test.js</span> to observe the transpiler's output.
+            </p>
+
+            <h3>The npm Package</h3>
+            <p>
+              This project is released in the form of an npm package, the page for which can be seen <a href="https://www.npmjs.com/package/@mickey-gs/semantic" target="_blank">here</a> (although there is no information provided there that is not present on the project's GitHub page).
+            </p>
+            <p>
+              This npm package works in a similar manner to most others, and does not take much work to update along with writing code for new features. The library's API is defined in the file <span class="inlineCode">index.js</span>, which is where the functions <span class="inlineCode">toRuby(code)</span> and <span class="inlineCode">toPython(code)</span> are also defined. The test script is stored in the file <span class="inlineCode">test.js</span>. When a new test case is added, this should be reflected in the <span class="inlineCode">tests/</span> directory, and the <span class="inlineCode">test.js</span> script should also be adjusted accordingly.
+            </p>
+
+            <h3>Existing Issues</h3>
+            <p>
+              Unfortunately, I had a university deadline for handing in my project work, and have had to leave it in its last stable state. I had made some good progress on implementing classes in Ruby, but had to strip that back ahead of the submission date, but this work can still be seen in the commit history of the <span class="inlineCode">src/</span> directory on Github. I would recommend looking at this work, as it would save a lot of time on implementing class support in Ruby, as well as in implementing classes in Python. 
+            </p>
+            <p>
+              Additionally, <span class="inlineCode">for</span> loops have been implemented, but in a fairly basic manner: they are automatically converted into <span class="inlineCode">while</span> loops, with the incrementing variable declared just before the <span class="inlineCode">while</span> loop and the call to increment the variable as the last line of the loop. However, this approach fails for any <span class="inlineCode">for</span> loop that has a <span class="inlineCode">continue</span> statement, or any other statement that causes the loop to skip any iterations. Due to the complexity of correcting this behaviour, I prioritised the addition of other features. Any potential contributors should keep this in mind, as this could be a potential cause for incorrect behaviour in an output program in the future.
             </p>
             </div>
         </div>
     </body>
 </html>
-<!--Talk about how this builds on d1
-say where i get outside code from
-explain flow of Development
-provide links to the references ive used
-add thing saying that i have obtained acorn under MIT license to github-->
