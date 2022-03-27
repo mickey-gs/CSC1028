@@ -20,7 +20,7 @@
     "url": "https://github.com/mickey-gs/CSC1028/issues"
   },
   "homepage": "https://github.com/mickey-gs/CSC1028#readme",
-  "devDependencies": {
-    "@babel/parser": "^7.17.3"
+  "dependencies": {
+    "@babel/parser": "^7.17.8"
   }
 }
