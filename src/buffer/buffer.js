@@ -48,6 +48,23 @@ export class Buffer {
     return this
   }
 
+  // Removes all trailing whitespace characters from the buffered text.
+  trim() {
+    let temp = this.#buffer.split("");
+    let i = temp.length - 1;
+    while (true) {
+      if (temp[i] == " " || temp[i] == "\n") {
+        i -= 1;
+      }
+      else {
+        break;
+      }
+    }
+    temp = temp.slice(0, i + 1);
+    this.#buffer = temp.join("");
+    return this;
+  }
+
   // Returns the contents of the buffer.
   get() {
     return this.#buffer;
